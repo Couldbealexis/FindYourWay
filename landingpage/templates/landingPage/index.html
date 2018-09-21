@@ -2,15 +2,39 @@
 {% load staticfiles %}
 
 {% block body %}
-
-    <div class="split left">
-      Column one
-    </div>
-    <div class="split right">
-        <div class="sideImg">
-            <img src="{% static "img/landingMaze.jpg" %}" alt="Maze" style="width: 100px; height: 100px;">
-        </div>
-
-    </div>
-
+      <nav class="navbar navbar-default navbar-fixed-top">
+         <div class="col-md-12">
+            <a class="navbar-brand" href="landingPage/index.html">
+            <img class="logo" src="static/img/icons/urWay64alt.png" alt="logo">
+            </a>
+         </div>
+      </nav>
+      <!-- Header -->
+      <div class="span12">
+         <div class="col-md-6 no-gutter text-center fill">
+            <h2 class="vcenter">Proyecto final para Inteligencia Artificial <br>
+              <h5 class="vcenter">César Alexis Gutiérrez González <br>
+              Isaac Hazael Villaseñor Cohen</h5>
+            </h2>
+            <br>
+            <button type="button" class="btn btn-primary btn-lg vcenter">¡PLAY!</button>
+         </div>
+         <div class="col-md-6 no-gutter text-center">
+            <div id="header" data-speed="2" data-type="background">
+               <div id="headslide" class="carousel slide" data-ride="carousel">
+                  <!-- <div class="carousel-inner" role="listbox"> -->
+                     <div class="item active">
+                        <img src="static/img/landingMaze.jpg" alt="Slide">
+                     </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div style="clear:both;"></div>
+      <!-- script -->
+      <script src="js/jquery.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/menu-color.js"></script>
+      <script src="js/modernizr.js"></script>
+      <script src="js/script.js"></script>
 {% endblock %}

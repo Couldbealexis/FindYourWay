@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/labyrinth/upload.css' %}">
+{% endblock %}
+
 {% block body %}
 
     <div class="split left">
@@ -8,7 +12,7 @@
     </div>
     <div class="split right">
         <div class="sideImg">
-            <img src="{% static "img/landingMaze.jpg" %}" alt="Maze" style="width: 100px; height: 100px;">
+            <img src="{% static "img/openDoor.jpg" %}" alt="Maze" style="height: 100%; width: 100%;" >
         </div>
 
     </div>

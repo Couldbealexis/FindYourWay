@@ -56,7 +56,7 @@ def index(request):
 def upload_maze(request):
     if request.method == 'POST':
         archive = request.FILES['archive']
-        if archive.name.endswith('.txt') or archive.name.endswith('.csv'):
+        if archive.name.endswith('.txt'):
             res = handle_file(archive)
             if res['data']:
                 data = {"data" : res['data']}
@@ -65,6 +65,8 @@ def upload_maze(request):
                 data = {"message": res['message']}
                 data = json.dumps(data)
             return HttpResponse(data, status=res['code'])
+        elif archive.name.endswith('.csv'):
+            print(archive)
     return HttpResponse(status=400)
 
 

@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import decimal
 from .models import *
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 
 def handle_file(file):
@@ -70,4 +71,25 @@ def upload_maze(request):
     return HttpResponse(status=400)
 
 
+@csrf_exempt
+def preview_maze(request):
+
+    # Provitional for test
+    data = """0,1,2,3,4,5.5555
+1,1,1,1,1,1
+1,1.9999,1,1,2,2
+2,2.66946,2,1,1,1
+1,1.1499,1,1,1,1
+0,0,0,0,0,0
+3,3,3,3,3,3"""
+    lines = data.splitlines()
+    maze = []
+    for line in lines:
+        arr = line.split(',')
+        maze.append(arr)
+
+    context = maze_properties(maze)
+
+
+    return render(request, './labyrinth/preview.html', context)
 

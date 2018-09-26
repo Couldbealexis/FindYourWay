@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/labyrinth/preview.css' %}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="split75 left">
+        {% for i in lands %}
+
+            <div class="a">{{ i }}</div>
+            <br>
+
+        {% endfor %}
+
+        {% for i in maze %}
+            <div class="row">
+                <div onclick="" class="cell"> {{ i }} </div>
+            </div>
+
+        {% endfor %}
+
+        <div class="row">
+            <div id="c014" onclick="SelectCell(0,14)" class="cell blueL"></div>
+        </div>
+
+    </div>
+    <div class="split25 right">
+        <div class="sideImg">
+            <img src="{% static "img/landingMaze.jpg" %}" alt="Maze" style="width: 100px; height: 100px;">
+        </div>
+
+    </div>
+
+{% endblock %}

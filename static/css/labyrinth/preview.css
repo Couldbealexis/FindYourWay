@@ -1,0 +1,22 @@
+.row{
+	padding: 0px;
+}
+
+.row .cell{
+	margin: -3px;
+	padding: 0px;
+	height: 33px;
+	width: 33px;
+	display: inline-block;
+	position: relative;
+}
+
+.row .cell:hover{
+	box-shadow: inset 0px 0px 6px green,
+				inset 0px 0px 2px green,
+				inset 0px 0px 15px green;
+}
+
+.row .blueL{
+	background:	#E0FFFF;
+}

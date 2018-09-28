@@ -15,11 +15,18 @@
 
         {% endfor %}
 
+
+{#        {% for i in maze %}#}
+{#            <div > {{ i }} </div>#}
+{##}
+{#        {% endfor %}#}
+
         {% for i in maze %}
             <div class="row">
-                <div onclick="" class="cell"> {{ i }} </div>
+                {% for val in i %}
+                    <div onclick="" class="cell"> {{ val }} </div>
+                {% endfor %}
             </div>
-
         {% endfor %}
 
         <div class="row">

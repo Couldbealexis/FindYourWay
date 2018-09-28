@@ -53,6 +53,14 @@ def index(request):
     return render_to_response('labyrinth/upload.html')
 
 
+def upload(request):
+    return render_to_response('labyrinth/upload.html')
+
+@csrf_exempt
+def character(request):
+    return render_to_response('labyrinth/character.html')
+
+
 @csrf_exempt
 def upload_maze(request):
     if request.method == 'POST':
@@ -92,4 +100,3 @@ def preview_maze(request):
 
 
     return render(request, './labyrinth/preview.html', context)
-

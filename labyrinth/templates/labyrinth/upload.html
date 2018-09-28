@@ -1,20 +1,61 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block styles %}
-    <link rel="stylesheet" href="{% static 'css/labyrinth/upload.css' %}">
-{% endblock %}
-
 {% block body %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+       <div class="col-md-12">
+          <a class="navbar-brand" href="/">
+            <img class="logo" src="static/img/icons/urWay64alt.png" alt="logo">
+          </a>
+       </div>
+    </nav>
+    <!-- Header -->
+    <div class="span12">
+       <div class="col-md-6 no-gutter text-center fill">
+         <div class="vcenter">
+           <h2>Welcome <br>
+             <h4>
+               Let´s start this aventure. <br>
+               We need to do something <br>
+               before start the game. <br>
+               Upload your maze with a <br>
+               .txt file format. <br>
+             </h4>
+           </h2>
+         </div>
+          <br>
+          <div class="form-group vcenter">
+            <!-- <label for="ejemplo_archivo_1">Add a file</label>
+            <input type="file" id="file" required/> -->
+            <!-- <p class="help-block">Only .txt</p> -->
+            <br>
+            <!-- <div style="text-align right"> -->
+              <!-- <a type="button" class="btn btn-primary btn-lg vcenter" href="/maze/character" >¡Upload!</a> -->
+              <!-- <input type="submit" name="boton" value="¡Upload!" class="btn btn-primary btn-lg vcenter"
+              onclick="location.href='/maze/character'"/> -->
+              <form action="/maze/character" method="post">
+                <input type="file" onchange="this.form.submit()" name="myFile"/>
+                <input type="submit">
+              </form>
+            <!-- </div> -->
+          </div>
 
-    <div class="split left">
-      Column one
+       </div>
+       <div class="col-md-6 no-gutter text-center">
+          <div id="header" data-speed="2" data-type="background">
+             <div id="headslide" class="carousel slide" data-ride="carousel">
+                <!-- <div class="carousel-inner" role="listbox"> -->
+                   <div class="item active">
+                      <img src="{% static "img/blueDoor.jpg" %}" alt="Slide">
+                   </div>
+             </div>
+          </div>
+       </div>
     </div>
-    <div class="split right">
-        <div class="sideImg">
-            <img src="{% static "img/openDoor.jpg" %}" alt="Maze" style="height: 100%; width: 100%;" >
-        </div>
-
-    </div>
-
+    <div style="clear:both;"></div>
 {% endblock %}
+
+
+{% block scripts %}
+  <script src="{% static 'js/labirynth/upload.js' %}"></script>
+{% endblock scripts %}

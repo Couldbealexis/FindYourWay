@@ -59,13 +59,13 @@ function checkMaze(){
     if(incomplete){
 
         swal({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
+          title: 'Do you want to continue?',
+          text: "Not all the lands has a name or a color (not default)",
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonText: 'Yes, go ahead!'
         }).then(function(result) {
           if (result) {
             swal(

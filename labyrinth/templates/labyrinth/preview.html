@@ -10,17 +10,31 @@
 {% block body %}
 
     <div class="split75 left">
+        <div class="row">
+            <div class="cell">
+            </div>
+            {% for i in maze.1 %}
+                <div class="cell" data-letter="{{ forloop.counter0 }}" >
 
-
+                </div>
+            {% endfor %}
+        </div>
         {% for i in maze %}
             <div class="row">
+                <div class="cell">
+                    {{ forloop.counter }}
+                </div>
                 {% for val in i %}
+{#                    <div class="cell"> {{ forloop.counter }} </div>#}
                     <div data-id="{{ val }}" onclick="" class="cell"> {{ val }} </div>
                 {% endfor %}
             </div>
         {% endfor %}
+    </div>
 
-        <table class="table">
+    <div class="split25 right">
+
+         <table class="table">
             <thead class="thead-dark">
                 <tr>
                   <th scope="col">ID</th>
@@ -45,17 +59,8 @@
                             </div>
                         </td>
                         <td>
-                            {{ i.color }}
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dropdown button
-                              </button>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                              </div>
-                            </div>
+                            <input data-colorID="{{ i.id }}" class="jscolor" onchange="update(this.jscolor, this)" value="808080">
+
                         </td>
                     </tr>
                 {% endfor %}
@@ -64,15 +69,7 @@
             </tbody>
         </table>
 
-
     </div>
-
-    <div class="split25 right">
-        <div class="sideImg">
-            <img src="{% static "img/landingMaze.jpg" %}" alt="Maze" style="width: 100px; height: 100px;">
-        </div>
-    </div>
-
 
 
 {% endblock %}
@@ -80,7 +77,38 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        $(".cell").css("background-color", "grey");
+
     </script>
     <script src="{% static 'js/labyrinth/preview.js' %}"></script>
+    <script src="{% static 'js/colorpicker/jscolor.js' %}"></script>
+    <script type="text/javascript">
+        var mazeList = (("{{maze |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
+            return {
+                l   : '<',
+                g   : '>',
+                quo : '"'
+            }[b];
+        }));
+
+        mazeList = mazeList.replace(/u'/g, '\'')
+        mazeList = mazeList.replace(/'/g, '\"')
+
+        maze = JSON.parse( mazeList );
+        {#console.log(maze)#}
+
+        var landList = (("{{lands |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
+            return {
+                l   : '<',
+                g   : '>',
+                quo : '"'
+            }[b];
+        }));
+
+        landList = landList.replace(/u'/g, '\'')
+        landList = landList.replace(/'/g, '\"')
+
+        lands = JSON.parse( landList );
+        {#console.log(lands)#}
+
+    </script>
 {% endblock scripts %}

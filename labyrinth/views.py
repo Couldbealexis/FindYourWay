@@ -65,30 +65,33 @@ def upload_maze(request):
             else:
                 data = {"message": res['message']}
                 data = json.dumps(data)
-            return HttpResponse(data, status=res['code'])
-        elif archive.name.endswith('.csv'):
-            print(archive)
-    return HttpResponse(status=400)
+            return HttpResponse(data, status=res['code'], content_type="application/json")
+        data = {"message": "archive must be a .txt"}
+        data = json.dumps(data)
+        return HttpResponse(data, status=400)
+    data = {"message": "request must be in POST method"}
+    data = json.dumps(data)
+    return HttpResponse(data, status=400)
 
 
 @csrf_exempt
 def preview_maze(request):
 
     # Provitional for test
-    data = """0,1,2,3,4,5.5555
-1,1,1,1,1,1
-1,1.9999,1,1,2,2
-2,2.66946,2,1,1,1
-1,1.1499,1,1,1,1
-0,0,0,0,0,0
-3,3,3,3,3,3"""
-#     data = """0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15"""
+#     data = """0,1,2,3,4,5.5555
+# 1,1,1,1,1,1
+# 1,1.9999,1,1,2,2
+# 2,2.66946,2,1,1,1
+# 1,1.1499,1,1,1,1
+# 0,0,0,0,0,0
+# 3,3,3,3,3,3"""
+    data = """0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
+0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
+0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
+0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
+0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
+0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
+0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15"""
     lines = data.splitlines()
     maze = []
     for line in lines:
@@ -97,6 +100,5 @@ def preview_maze(request):
 
     context = maze_properties(maze)
 
-
-    return render(request, './labyrinth/preview.html', context)
+    return render(request, './labyrinth/preview.html', context=context )
 

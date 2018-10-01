@@ -13,9 +13,9 @@ def clean_response():
 
 class Land:
 
-    def __init__(self, id, name = "", color=None, image=None):
+    def __init__(self, id, color="808080", image=""):
         self.id = id
-        self.name = name
+        self.name = str(id)
         self.color = color
         self.image = image
 

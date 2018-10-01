@@ -1,44 +1,117 @@
-{% extends 'base.html' %}
+{% extends 'baseb4.html' %}
 {% load staticfiles %}
+
 
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/labyrinth/preview.css' %}">
 {% endblock %}
 
+
 {% block body %}
-
     <div class="split75 left">
-        {% for i in lands %}
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br>
+        <div class="info text-center">
+            <h4>
+                Congrats! You just upload your labirynth. Now is necessary that you set up the name and color for the lands.
+            </h4>
+            <h6>Good luck!</h6>
+        </div>
+        <div class="row">
+            <div class="Hcell">
+            </div>
+            {% for i in maze.1 %}
+                <div class="Hcell" data-letter="{{ forloop.counter0 }}" >
 
-            <div class="a">{{ i }}</div>
-            <br>
-
-        {% endfor %}
-
-
-{#        {% for i in maze %}#}
-{#            <div > {{ i }} </div>#}
-{##}
-{#        {% endfor %}#}
-
+                </div>
+            {% endfor %}
+        </div>
         {% for i in maze %}
             <div class="row">
+                <div class="Hcell">
+                    {{ forloop.counter }}
+                </div>
                 {% for val in i %}
-                    <div onclick="" class="cell"> {{ val }} </div>
+                    <div data-id="{{ val }}" onclick="" class="cell"> {{ val }} </div>
                 {% endfor %}
             </div>
         {% endfor %}
-
-        <div class="row">
-            <div id="c014" onclick="SelectCell(0,14)" class="cell blueL"></div>
+        <br><br>
+        <div class="row text-center">
+            <div class="col-12">
+                <button type="button" class="btn btn-primary btn-lg" onclick="checkMaze()">
+                    Continue
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
         </div>
-
     </div>
+
     <div class="split25 right">
-        <div class="sideImg">
-            <img src="{% static "img/landingMaze.jpg" %}" alt="Maze" style="width: 100px; height: 100px;">
-        </div>
+         <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Color</th>
+                </tr>
+            </thead>
+            <tbody>
 
+                {% for i in lands %}
+                    <tr>
+                        <td id="{{ i.id }}">{{ i.id }}</td>
+                        <td>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">{{ i.id }}</span>
+                              </div>
+                              <input type="text"                        class="form-control"
+                                     placeholder="{{ i.id }}"           aria-label="Username"
+                                     aria-describedby="basic-addon1"    onkeyup="changeName(this)">
+                            </div>
+                        </td>
+                        <td>
+                            <input data-colorID="{{ i.id }}" class="jscolor" onchange="update(this.jscolor, this)" value="808080">
+
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <tr></tr>
+            </tbody>
+        </table>
     </div>
-
 {% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/labyrinth/preview.js' %}"></script>
+    <script src="{% static 'js/colorpicker/jscolor.js' %}"></script>
+    <script type="text/javascript">
+        var mazeList = (("{{maze |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
+            return {
+                l   : '<',
+                g   : '>',
+                quo : '"'
+            }[b];
+        }));
+        mazeList = mazeList.replace(/u'/g, '\'');
+        mazeList = mazeList.replace(/'/g, '\"');
+        maze = JSON.parse( mazeList );
+
+        var landList = (("{{lands |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
+            return {
+                l   : '<',
+                g   : '>',
+                quo : '"'
+            }[b];
+        }));
+        landList = landList.replace(/u'/g, '\'');
+        landList = landList.replace(/'/g, '\"');
+        lands = JSON.parse( landList );
+    </script>
+{% endblock scripts %}

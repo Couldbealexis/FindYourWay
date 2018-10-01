@@ -25,19 +25,13 @@
          </div>
           <br>
           <div class="form-group vcenter">
-            <!-- <label for="ejemplo_archivo_1">Add a file</label>
-            <input type="file" id="file" required/> -->
-            <!-- <p class="help-block">Only .txt</p> -->
-            <br>
-            <!-- <div style="text-align right"> -->
-              <!-- <a type="button" class="btn btn-primary btn-lg vcenter" href="/maze/character" >¡Upload!</a> -->
-              <!-- <input type="submit" name="boton" value="¡Upload!" class="btn btn-primary btn-lg vcenter"
-              onclick="location.href='/maze/character'"/> -->
-              <form action="/maze/character" method="post">
-                <input type="file" onchange="this.form.submit()" name="myFile"/>
-                <input type="submit">
-              </form>
-            <!-- </div> -->
+            <form method="post" enctype="">
+                <label for="ejemplo_archivo_1">Add a file</label>
+                <input type="file" id="fileInput" />
+                <p class="help-block">Only .txt</p>
+                <button disabled="disabled" class="btn btn-primary btn-lg" href="/maze/preview">Next</button>
+              <br>
+            </form>
           </div>
 
        </div>
@@ -58,4 +52,11 @@
 
 {% block scripts %}
   <script src="{% static 'js/labirynth/upload.js' %}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript">
+      $("#fileInput").change(function()
+      {
+        $("button").prop("disabled", this.files.length == 0);
+      });
+  </script>
 {% endblock scripts %}

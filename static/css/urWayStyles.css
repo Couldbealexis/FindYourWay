@@ -33,3 +33,33 @@
 .right{
     right: 0;
 }
+
+.sideImg{
+    width: 100%;
+    height: 100%;
+}
+
+.header img {
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+
+
+.header h1 {
+  position: relative;
+  top: 18px;
+  left: 10px;
+}
+
+.centered{
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 30rem;
+    height: 25rem;
+    border-radius: 3px;
+}

@@ -30,16 +30,49 @@
             {% endfor %}
         </div>
         {% for i in maze %}
+            {% with row=forloop.counter0 %}
             <div class="row">
                 <div class="Hcell">
                     {{ forloop.counter }}
                 </div>
                 {% for val in i %}
-                    <div data-id="{{ val }}" onclick="" class="cell"> {{ val }} </div>
+                    <div data-id="{{ val }}" data-row="{{ row }}" data-column="{{ forloop.counter0 }}" onclick="selectCell( {{ forloop.counter0 }}, {{ row }} )" class="cell"> {{ val }} </div>
                 {% endfor %}
             </div>
+            {% endwith %}
         {% endfor %}
         <br><br>
+
+        <div class="row text-center col-12">
+            <div class="input-group mb-3 col-3">
+              <div class="input-group-prepend">
+    {#            <span class="input-group-text" id="basic-addon1">Inicio</span>#}
+                <button type="button" class="btn btn-primary btn-sm" onclick="selectBegin()" >
+                    Begin
+                </button>
+              </div>
+              <input type="text"                    class="form-control"
+                     placeholder="Begin"            aria-label="inicio"
+                     aria-describedby="basic-addon1" readonly="readonly"
+                     id="inputBegin">
+            </div>
+
+            <div class="input-group mb-3 col-3 col-lg-offset-1">
+              <div class="input-group-prepend">
+    {#            <span class="input-group-text" id="basic-addon1">Inicio</span>#}
+                <button type="button" class="btn btn-primary btn-sm" onclick="selectEnd()">
+                    End
+                </button>
+              </div>
+              <input type="text"                    class="form-control"
+                     placeholder="End"              aria-label="fin"
+                     aria-describedby="basic-addon1" readonly="readonly"
+                     id="inputEnd">
+            </div>
+
+        </div>
+
+
         <div class="row text-center">
             <div class="col-12">
                 <button type="button" class="btn btn-primary btn-lg" onclick="checkMaze()">
@@ -113,5 +146,13 @@
         landList = landList.replace(/u'/g, '\'');
         landList = landList.replace(/'/g, '\"');
         lands = JSON.parse( landList );
+
+        begin = false;
+        end = false;
+
+        coordBegin = [];
+        coordEnd = [];
+
+
     </script>
 {% endblock scripts %}

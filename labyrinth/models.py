@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 
 response = {
     "code":'',
@@ -26,3 +27,6 @@ class Land:
         return { "id" : self.id, "name" : self.name, "color": self.color, "image": self.image }
 
 
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    archive = forms.FileField()

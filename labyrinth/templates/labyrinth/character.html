@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block body %}
+      <nav class="navbar navbar-default navbar-fixed-top">
+         <div class="col-md-12">
+            <a class="navbar-brand" href="/">
+              <img class="logo" src="{%static 'img/icons/urWay64alt.png'%}" alt="logo">
+            </a>
+         </div>
+      </nav>
+      <!-- Header -->
+      <div class="span12">
+         <div class="col-md-6 no-gutter text-center fill">
+            <!-- <div class="clearfix visible-sm visible-md visible-xs visible-lg" ></div> -->
+
+            <h2> <br> <br> Select a Character <br></h2>
+            <h4>minumum ONE(1) maximum FOUR(4)</h4>
+            <br>
+            <div >
+              <div class="row">
+                <div class="col-xs-6 col-md-3">
+                  <a href="#" class="thumbnail" onclick="check()" id="batman">
+                    <img src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
+                  </a>
+                  <a href="#" class="thumbnail" onclick="">
+                    <img src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
+                  </a>
+                  <a href="#" class="thumbnail" onclick="" id="">
+                    <img src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
+                  </a>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                  <a href="#" class="thumbnail" onclick="">
+                    <img src="{%static 'img/characters/captain.jpg'%}" alt="Captain America">
+                  </a>
+                  <a href="#" class="thumbnail" onclick="">
+                    <img src="{%static 'img/characters/superman.jpg'%}" alt="Superman">
+                  </a>
+                  <a href="#" class="thumbnail" onclick="">
+                    <img src="{%static 'img/characters/ironman.jpg'%}" alt="Ironman">
+                  </a>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                  <a href="#" class="thumbnail" onclick="">
+                    <img src="{%static 'img/characters/panther.jpg'%}" alt="Black Panther">
+                  </a>
+                  <a href="#" class="thumbnail" onclick="">
+                    <img src="{%static 'img/characters/joker.jpg'%}" alt="Joker">
+                  </a>
+                </div>
+
+                <div >
+                  <button disabled="disabled" class="btn btn-primary btn-lg vcenter">¡Next!</button>
+                </div>
+              </div>
+            </div>
+         </div>
+         <div class="col-md-6 no-gutter text-center">
+            <div id="header" data-speed="2" data-type="background">
+               <div id="headslide" class="carousel slide" data-ride="carousel">
+                  <!-- <div class="carousel-inner" role="listbox"> -->
+                     <!-- <div class="item active">
+                        <img src="{% static "img/openDoor.jpg" %}" alt="Slide">
+                     </div> -->
+                     <table class="table">
+                      <thead class="bg-primary">
+                        <tr>
+                          <th scope="col">Hero</th>
+                          <th scope="col">Land</th>
+                          <th scope="col">Last</th>
+                          <th scope="col">Handle</th>
+                        </tr>
+                      </thead>
+                      <tbody style="color: black">
+                        <tr>
+                          <th scope="row">Batman</th>
+                          <td>Mark</td>
+                          <td>Otto</td>
+                          <td>@mdo</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>Jacob</td>
+                          <td>Thornton</td>
+                          <td>@fat</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td>Larry</td>
+                          <td>the Bird</td>
+                          <td>@twitter</td>
+                        </tr>
+                      </tbody>
+                    </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div style="clear:both;"></div>
+{% endblock %}
+
+{% block scripts %}
+
+  <script type="text/javascript">
+    function check()
+    {
+        alert("Hola");
+    }
+  </script>
+
+{% endblock scripts %}

@@ -1,114 +1,91 @@
-{% extends 'base.html' %}
+{% extends 'baseb4.html' %}
 {% load staticfiles %}
 
-{% block body %}
-      <nav class="navbar navbar-default navbar-fixed-top">
-         <div class="col-md-12">
-            <a class="navbar-brand" href="/">
-              <img class="logo" src="{%static 'img/icons/urWay64alt.png'%}" alt="logo">
-            </a>
-         </div>
-      </nav>
-      <!-- Header -->
-      <div class="span12">
-         <div class="col-md-6 no-gutter text-center fill">
-            <!-- <div class="clearfix visible-sm visible-md visible-xs visible-lg" ></div> -->
 
-            <h2> <br> <br> Select a Character <br></h2>
-            <h4>minumum ONE(1) maximum FOUR(4)</h4>
+{% block body %}
+    <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br>
+
+        <div class="centered text-center">
+            <h2 class="text-center">¡Select Your Character!</h2>
             <br>
-            <div >
-              <div class="row">
+            <h4 class="text-center">
+                You have to select 1(min) to 4(max) <br>
+            </h4>
+            <br><br>
+            <div class="row">
                 <div class="col-xs-6 col-md-3">
                   <a href="#" class="thumbnail" onclick="check()" id="batman">
-                    <img src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
+                    <img width="100px" height="80px" src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
                   </a>
                   <a href="#" class="thumbnail" onclick="">
-                    <img src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
+                    <img width="100px" height="80px" src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
                   </a>
                   <a href="#" class="thumbnail" onclick="" id="">
-                    <img src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
+                    <img width="100px" height="80px" src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
                   </a>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
                   <a href="#" class="thumbnail" onclick="">
-                    <img src="{%static 'img/characters/captain.jpg'%}" alt="Captain America">
+                    <img width="100px" height="80px" src="{%static 'img/characters/captain.jpg'%}" alt="Captain America">
                   </a>
                   <a href="#" class="thumbnail" onclick="">
-                    <img src="{%static 'img/characters/superman.jpg'%}" alt="Superman">
+                    <img width="100px" height="80px" src="{%static 'img/characters/superman.jpg'%}" alt="Superman">
                   </a>
                   <a href="#" class="thumbnail" onclick="">
-                    <img src="{%static 'img/characters/ironman.jpg'%}" alt="Ironman">
+                    <img width="100px" height="80px" src="{%static 'img/characters/ironman.jpg'%}" alt="Ironman">
                   </a>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
                   <a href="#" class="thumbnail" onclick="">
-                    <img src="{%static 'img/characters/panther.jpg'%}" alt="Black Panther">
+                    <img width="100px" height="80px" src="{%static 'img/characters/panther.jpg'%}" alt="Black Panther">
                   </a>
                   <a href="#" class="thumbnail" onclick="">
-                    <img src="{%static 'img/characters/joker.jpg'%}" alt="Joker">
+                    <img width="100px" height="80px"src="{%static 'img/characters/joker.jpg'%}" alt="Joker">
                   </a>
                 </div>
 
                 <div >
-                  <button disabled="disabled" class="btn btn-primary btn-lg vcenter">¡Next!</button>
+                  <a disabled="disabled" class="btn btn-primary btn-lg vcenter">¡Next!</a>
                 </div>
+
               </div>
-            </div>
-         </div>
-         <div class="col-md-6 no-gutter text-center">
-            <div id="header" data-speed="2" data-type="background">
-               <div id="headslide" class="carousel slide" data-ride="carousel">
-                  <!-- <div class="carousel-inner" role="listbox"> -->
-                     <!-- <div class="item active">
-                        <img src="{% static "img/openDoor.jpg" %}" alt="Slide">
-                     </div> -->
-                     <table class="table">
-                      <thead class="bg-primary">
-                        <tr>
-                          <th scope="col">Hero</th>
-                          <th scope="col">Land</th>
-                          <th scope="col">Last</th>
-                          <th scope="col">Handle</th>
-                        </tr>
-                      </thead>
-                      <tbody style="color: black">
-                        <tr>
-                          <th scope="row">Batman</th>
-                          <td>Mark</td>
-                          <td>Otto</td>
-                          <td>@mdo</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>@fat</td>
-                        </tr>
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>Larry</td>
-                          <td>the Bird</td>
-                          <td>@twitter</td>
-                        </tr>
-                      </tbody>
-                    </table>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div style="clear:both;"></div>
+        </div>
+    </div>
+
+
+    <div class="split right">
+        <div class="sideImg">
+            <img src="{% static 'img/blueDoor.jpg' %}" alt="blueDor"  style="width: 100%; height: 100%;">
+        </div>
+    </div>
 {% endblock %}
 
+
 {% block scripts %}
+    <script src="{% static 'js/labyrinth/upload.js' %}"></script>
+    <script type="text/javascript">
+        var one ;
+        var err_flag = false;
+        var jvars = document.getElementById('firstDiv').getAttribute('data-js-vars');
+        jvars = jvars.replace(/'/g, '"');
+        jvars = JSON.parse(jvars || '{}');
 
-  <script type="text/javascript">
-    function check()
-    {
-        alert("Hola");
-    }
-  </script>
-
+        if(jvars.error == 1){
+           swal({
+              title: 'Oh no!',
+              {#text: "It seems that your Labirynth isn't correct.",#}
+              text: jvars.message,
+              type: 'error',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'I understand'
+            })
+        }
+    </script>
 {% endblock scripts %}

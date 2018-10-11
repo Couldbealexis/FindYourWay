@@ -139,6 +139,16 @@ def preview_maze(request):
 
     return render(request, './labyrinth/preview.html', context=context )
 
+# Character por Isaac
+@csrf_exempt
+def character(request):
+    template = './labyrinth/character.html'
+    data = {"javascript_vars" : {
+        "message": "",
+        "error": "0"
+    }}
+    return render(request, template, context=data)
+
 
 @csrf_exempt
 def play(request):

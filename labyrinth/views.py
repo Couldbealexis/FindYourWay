@@ -78,10 +78,10 @@ def upload(request):
 
 @csrf_exempt
 def upload_maze(request):
-    template = './labyrinth/upload.html'
+    template = './labyrinth/error.html'
     data = {
             "message": "request must be in POST method",
-            "error" : "1"
+            "error": "1"
            }
     if request.method == 'POST':
         archive = request.FILES['archive']

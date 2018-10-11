@@ -1,34 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'baseb4.html' %}
 {% load staticfiles %}
 
-{% block body %}
-      <nav class="navbar navbar-default navbar-fixed-top">
-         <div class="col-md-12">
-            <a class="navbar-brand" href="/">
-              <img class="logo" src="static/img/icons/urWay64alt.png" alt="logo">
-            </a>
-         </div>
-      </nav>
-      <!-- Header -->
-      <div class="span12">
-         <div class="col-md-6 no-gutter text-center fill">
-            <h2 class="vcenter">¡OPS! Something happend <br></h2>
-            <br>
-            <div class="vcenter">
-              <a type="button" class="btn btn-primary btn-lg vcenter" href="/maze/upload" >¡PLAY!</a>
-            </div>
 
-         </div>
-         <div class="col-md-6 no-gutter text-center">
-            <div id="header" data-speed="2" data-type="background">
-               <div id="headslide" class="carousel slide" data-ride="carousel">
-                  <!-- <div class="carousel-inner" role="listbox"> -->
-                     <div class="item active">
-                        <img src="{% static "img/mistake2.jpg" %}" alt="Slide">
-                     </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div style="clear:both;"></div>
+{% block body %}
+    <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
+        <div class="header">
+            <a class="navbar-brand" href="{{ url: '' }}">
+                <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
+            </a>
+            <h1>Find your way!</h1>
+        </div>
+        <br>
+
+        <div class="centered">
+            <h2 class="text-center">What!?</h2>
+            <br>
+            <h4 class="text-center">
+                Well this doesn´t be expect to happen. <br>
+                Feel free to start over again.
+                <br>
+                We are sorry.
+            </h4>
+        </div>
+    </div>
+
+
+    <div class="split right">
+        <div class="sideImg">
+            <img src="{% static 'img/mistake2.jpg' %}" alt="mistake"  style="width: 100%; height: 100%;">
+        </div>
+    </div>
 {% endblock %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

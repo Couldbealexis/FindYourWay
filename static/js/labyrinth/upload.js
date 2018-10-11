@@ -1,38 +1,44 @@
 $(function () {
     document.getElementById('fileInput').onchange = function () {
         var file = this.files[0];
+        var files_length = this.files.length
         var ext = file.name.split('.').pop();
+        var err_flag = false;
         if (ext == "txt"){
-            $("button").prop("disabled", this.files.length == 0);
 
             var reader = new FileReader();
             reader.onload = function(progressEvent){
             // Entire file
             //     console.log("Entire File");
             //     console.log(this.result);
-            //     console.log("###");
-            //     console.log("By Lines");
                 // By lines
                 var lines = this.result.split('\n');
-                // console.log(lines);
                 for(var line = 0; line < lines.length; line++){
-                  // console.log(lines[line]);
-                    console.log( (line + 1).toString() + " line");
                   var one_line = lines[line].split(',');
-                  console.log(one_line)
                   for(var land =0; land<one_line.length; land++){
-                      console.log(land, one_line[land], one_line[land].length);
                       one = one_line[land];
-                      if(!isNaN(one)) {
-                        console.log('could not parse')
-                      }
-                      else{
-                        console.log('parse good')
+                      one = parseFloat(one);
+                      if(isNaN(one)) {
+                          console.log(line, land, one);
+                          err_flag = true;
                       }
                   }
-
+                }
+                if(err_flag == false){
+                    $("button").prop("disabled", files_length == 0);
+                }
+                else{
+                    swal({
+                      title: 'Oh no!',
+                      text: "Your txt is not well structured, please check.",
+                      type: 'error',
+                      confirmButtonColor: '#3085d6',
+                      confirmButtonText: 'I understand'
+                    });
+                    $("#submitbtn").prop("disabled", true);
                 }
             };
+
             reader.readAsText(file);
 
         }

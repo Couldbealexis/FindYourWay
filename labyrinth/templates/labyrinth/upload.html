@@ -3,7 +3,7 @@
 
 
 {% block body %}
-    <div class="split left">
+    <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
         <div class="header">
           <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
           <h1>Find your way!</h1>
@@ -16,14 +16,11 @@
             <h4 class="text-center">
                 Your adventure is just about to begin. <br>
                 But before, you need to upload a <br>
-                <span> <strong>.txt</strong> archive with your labirynth. </span>
+                <span> <strong>.txt</strong> archive with your labyrinth. </span>
                 <br>
                 Good luck, player!
             </h4>
-
             <br><br>
-
-
             <form method="post" enctype="multipart/form-data" action="previewMaze/" id="form">
                 <div class="input-group mb-3">
                     <label for="ejemplo_archivo_1"></label>
@@ -31,9 +28,7 @@
                     <button type="submit" disabled="disabled" class="btn btn-primary btn-sm" >Next</button>
                 </div>
             </form>
-
         </div>
-
     </div>
 
 
@@ -47,5 +42,21 @@
 
 {% block scripts %}
     <script src="{% static 'js/labyrinth/upload.js' %}"></script>
+    <script type="text/javascript">
+        var one ;
+        var jvars = document.getElementById('firstDiv').getAttribute('data-js-vars');
+        jvars = jvars.replace(/'/g, '"');
+        jvars = JSON.parse(jvars || '{}');
 
+        if(jvars.error == 1){
+           swal({
+              title: 'Oh no!',
+              {#text: "It seems that your Labirynth isn't correct.",#}
+              text: jvars.message,
+              type: 'error',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'I understand'
+            })
+        }
+    </script>
 {% endblock scripts %}

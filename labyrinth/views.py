@@ -58,37 +58,57 @@ def maze_properties(map):
 
 @csrf_exempt
 def index(request):
-    return render_to_response('labyrinth/upload.html')
+    template = './labyrinth/upload.html'
+    data = {"javascript_vars" : {
+        "message": "",
+        "error": "0"
+    }}
+    return render(request, template, context=data)
 
 
 @csrf_exempt
 def upload(request):
-    return render_to_response('labyrinth/upload.html')
+    template = './labyrinth/upload.html'
+    data = {"javascript_vars": {
+        "message": "request must be in POST method",
+        "error": "0"
+    }}
+    return render(request, template, context=data)
 
 
 @csrf_exempt
 def upload_maze(request):
+    template = './labyrinth/upload.html'
+    data = {
+            "message": "request must be in POST method",
+            "error" : "1"
+           }
     if request.method == 'POST':
         archive = request.FILES['archive']
         if archive.name.endswith('.txt'):
             res = handle_file(archive)
-            print('txt')
             if res['data']:
-                data = {"data" : res['data']}
-                data = json.dumps(data)
+                print('on data')
+                data = {
+                        "data" : res['data']
+                       }
+                template = './labyrinth/preview.html'
             else:
-                data = {"message": res['message']}
-                data = json.dumps(data)
-            data = json.loads(data)
-            return render(request, './labyrinth/preview.html', context=data)
-        data = {"message": "archive must be a .txt"}
-        data = json.dumps(data)
-        return HttpResponse(data, status=400)
-    data = {"message": "request must be in POST method"}
-    data = json.dumps(data)
-    # return HttpResponse(data, status=400)
-    print('render next')
-    return render(request, './labyrinth/preview.html', context=data)
+                print('no data')
+                data = {
+                        "message": res['message'],
+                        "error": "1"
+                       }
+        else:
+            print('no txt')
+            data = {
+                    "message": "archive must be a .txt",
+                    "error": "1"
+                   }
+    print(data)
+    print(template)
+
+    return render(request, template, context=data)
 
 
 @csrf_exempt

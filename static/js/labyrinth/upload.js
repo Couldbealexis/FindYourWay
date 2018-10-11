@@ -1,7 +1,7 @@
 $(function () {
     document.getElementById('fileInput').onchange = function () {
         var file = this.files[0];
-        var files_length = this.files.length
+        var files_length = this.files.length;
         var ext = file.name.split('.').pop();
         var err_flag = false;
         if (ext == "txt"){

@@ -5,12 +5,12 @@
 {% block body %}
     <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
         <div class="header">
-          <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
+          <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
           <h1>Find your way!</h1>
         </div>
         <br>
 
-        <div class="centered">
+        <div class="centered text-center">
             <h2 class="text-center">Welcome!</h2>
             <br>
             <h4 class="text-center">

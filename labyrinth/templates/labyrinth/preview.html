@@ -23,13 +23,13 @@
         <div class="row">
             <div class="Hcell">
             </div>
-            {% for i in maze.1 %}
+            {% for i in data.maze.1 %}
                 <div class="Hcell" data-letter="{{ forloop.counter0 }}" >
 
                 </div>
             {% endfor %}
         </div>
-        {% for i in maze %}
+        {% for i in data.maze %}
             {% with row=forloop.counter0 %}
             <div class="row">
                 <div class="Hcell">
@@ -94,7 +94,7 @@
             </thead>
             <tbody>
 
-                {% for i in lands %}
+                {% for i in data.lands %}
                     <tr>
                         <td id="{{ i.id }}">{{ i.id }}</td>
                         <td>
@@ -109,7 +109,6 @@
                         </td>
                         <td>
                             <input data-colorID="{{ i.id }}" class="jscolor" onchange="update(this.jscolor, this)" value="808080">
-
                         </td>
                     </tr>
                 {% endfor %}
@@ -125,34 +124,14 @@
     <script src="{% static 'js/labyrinth/preview.js' %}"></script>
     <script src="{% static 'js/colorpicker/jscolor.js' %}"></script>
     <script type="text/javascript">
-        var mazeList = (("{{maze |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
-            return {
-                l   : '<',
-                g   : '>',
-                quo : '"'
-            }[b];
-        }));
-        mazeList = mazeList.replace(/u'/g, '\'');
-        mazeList = mazeList.replace(/'/g, '\"');
-        maze = JSON.parse( mazeList );
-
-        var landList = (("{{lands |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
-            return {
-                l   : '<',
-                g   : '>',
-                quo : '"'
-            }[b];
-        }));
-        landList = landList.replace(/u'/g, '\'');
-        landList = landList.replace(/'/g, '\"');
-        lands = JSON.parse( landList );
+        var jvars = {{ data |safe}};
+        var maze = jvars.maze;
+        var lands = jvars.lands;
 
         begin = false;
         end = false;
-
         coordBegin = [];
         coordEnd = [];
-
 
     </script>
 {% endblock scripts %}

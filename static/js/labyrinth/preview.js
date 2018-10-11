@@ -104,3 +104,34 @@ function selectCell(x, y){
         end = false
     }
 }
+
+
+/*
+<script src="jscolor.js"></script>
+
+<div style="position:absolute; left:280px; top:10px;">
+    toHEXString = <span id="hex-str"></span><br />
+    toRGBString = <span id="rgb-str"></span><br />
+    R, G, B = <span id="rgb"></span><br />
+    H, S, V = <span id="hsv"></span>
+</div>
+
+<input class="jscolor {onFineChange:'update(this)'}" value="ffcc00">
+
+<script>
+function update(picker) {
+    document.getElementById('hex-str').innerHTML = picker.toHEXString();
+    document.getElementById('rgb-str').innerHTML = picker.toRGBString();
+
+    document.getElementById('rgb').innerHTML =
+        Math.round(picker.rgb[0]) + ', ' +
+        Math.round(picker.rgb[1]) + ', ' +
+        Math.round(picker.rgb[2]);
+
+    document.getElementById('hsv').innerHTML =
+        Math.round(picker.hsv[0]) + '&deg;, ' +
+        Math.round(picker.hsv[1]) + '%, ' +
+        Math.round(picker.hsv[2]) + '%';
+}
+</script>
+ */

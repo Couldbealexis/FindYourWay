@@ -44,6 +44,11 @@ function update(jscolor, event) {
     var arr = $.find("div[data-id='" + idx + "']");
 
     $(arr).css("background-color", '#' + jscolor);
+    lands.find(function (element) {
+        if (element.id == idx ){
+            element.color = jscolor.toString();
+        }
+    });
 
 }
 
@@ -55,7 +60,9 @@ function checkMaze(){
             incomplete = true;
         }
     });
-    console.log(incomplete)
+    if ($('#inputBegin').val() == "" || $('#inputEnd').val() == ""){
+        incomplete = true;
+    }
     if(incomplete){
 
         swal({
@@ -90,48 +97,17 @@ function selectEnd() {
 }
 
 function selectCell(x, y){
-    console.log(x, y)
+    // console.log(x, y);
     if(begin){
-        $('#inputBegin').val(x.toString() + "," + y.toString())
-        coordBegin.append(x);
-        coordBegin.append(y);
+        $('#inputBegin').val(x.toString() + "," + y.toString());
+        coordBegin.push(x);
+        coordBegin.push(y);
         begin = false
     }
     else if(end){
-        $('#inputEnd').val(x.toString() + "," + y.toString())
-        coordEnd.append(x);
-        coordEnd.append(y);
+        $('#inputEnd').val(x.toString() + "," + y.toString());
+        coordEnd.push(x);
+        coordEnd.push(y);
         end = false
     }
 }
-
-
-/*
-<script src="jscolor.js"></script>
-
-<div style="position:absolute; left:280px; top:10px;">
-    toHEXString = <span id="hex-str"></span><br />
-    toRGBString = <span id="rgb-str"></span><br />
-    R, G, B = <span id="rgb"></span><br />
-    H, S, V = <span id="hsv"></span>
-</div>
-
-<input class="jscolor {onFineChange:'update(this)'}" value="ffcc00">
-
-<script>
-function update(picker) {
-    document.getElementById('hex-str').innerHTML = picker.toHEXString();
-    document.getElementById('rgb-str').innerHTML = picker.toRGBString();
-
-    document.getElementById('rgb').innerHTML =
-        Math.round(picker.rgb[0]) + ', ' +
-        Math.round(picker.rgb[1]) + ', ' +
-        Math.round(picker.rgb[2]);
-
-    document.getElementById('hsv').innerHTML =
-        Math.round(picker.hsv[0]) + '&deg;, ' +
-        Math.round(picker.hsv[1]) + '%, ' +
-        Math.round(picker.hsv[2]) + '%';
-}
-</script>
- */

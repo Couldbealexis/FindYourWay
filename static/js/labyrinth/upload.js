@@ -8,10 +8,6 @@ $(function () {
 
             var reader = new FileReader();
             reader.onload = function(progressEvent){
-            // Entire file
-            //     console.log("Entire File");
-            //     console.log(this.result);
-                // By lines
                 var lines = this.result.split('\n');
                 for(var line = 0; line < lines.length; line++){
                   var one_line = lines[line].split(',');
@@ -54,28 +50,3 @@ $(function () {
 
     };
 });
-
-
-
-/*
-$("#form").submit(function(e){
-    var formData = new FormData(document.getElementById("formuploadajax"));
-    formData.append("archive", $('#form input').get(0).files[0]);
-    e.preventdefault();
-    $.ajax({
-        url: 'play/',
-        type: 'POST',
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function(archive) {
-            // alert('well done')
-            // alert(archive.responseText);
-        },
-        error: function () {
-            alert('Oh no, It seems that your Labirynth isn\'t correct.');
-        }
-    });
-  });
-*/

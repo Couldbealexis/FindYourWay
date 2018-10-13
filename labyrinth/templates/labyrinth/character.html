@@ -60,7 +60,7 @@
                 </div>
 
                 <div >
-                  <a disabled="disabled" class="btn btn-primary btn-lg vcenter">¡Next!</a>
+                  <a disabled="disabled" id="next" class="btn btn-primary btn-lg vcenter">¡Next!</a>
                 </div>
 
               </div>
@@ -74,10 +74,6 @@
         </div> -->
 
         <table class="table" id="characters-table">
-          <th>Heroe</th>
-          <th>Color</th>
-          <th>Camino</th>
-          <th>Costo</th>
         </table>
 
     </div>
@@ -87,6 +83,7 @@
 
 {% block scripts %}
     <script src="{% static 'js/labyrinth/upload.js' %}"></script>
+
     <script type="text/javascript">
         var one ;
         var err_flag = false;
@@ -105,9 +102,19 @@
             })
         }
     </script>
+
     <script type="text/javascript">
 
+      let jvars_text = {"maze":[["0.0","1.0","2.0","3.0","4.0","5.56"],["1.0","1.0","1.0","1.0","1.0","1.0"],["1.0","2.0","1.0","1.0","2.0","2.0"],["2.0","2.67","2.0","1.0","1.0","1.0"],["1.0","1.15","1.0","1.0","1.0","1.0"],["0.0","0.0","0.0","0.0","0.0","0.0"],["3.0","3.0","3.0","3.0","3.0","3.0"]],"lands":[{"id":"0.0","name":"fuego","color":"808080","image":""},{"id":"1.0","name":"tierra","color":"808080","image":""},{"id":"2.0","name":"agua","color":"808080","image":""},{"id":"3.0","name":"3.0","color":"808080","image":""},{"id":"4.0","name":"4.0","color":"808080","image":""},{"id":"5.56","name":"5.56","color":"808080","image":""},{"id":"2.67","name":"2.67","color":"808080","image":""},{"id":"1.15","name":"1.15","color":"808080","image":""}]};
       let selectedCharacters = Array();
+
+      setTableHeaders();
+      function setTableHeaders(){
+      $("#characters-table").append("<th>Heroe</th>")
+      jvars_text.lands.forEach(function(land, landIndex){
+        $("#characters-table").append("<th>" + land.name + "</th>")
+      });
+      }
 
       $(".thumbnail").on("click", function(e){
         let jqCharacter = $(e.currentTarget);
@@ -116,16 +123,20 @@
       });
 
       function selectACharacter(jqCharacter){
+
       if(selectedCharacters.length < 4){
+
         jqCharacter.addClass("selected");
 
-        selectedCharacters.push({
-          'name': jqCharacter.attr('name'),
-          'color': "#000",
-          'cost': "0"
+        pushableObject = { 'name': jqCharacter.attr('name') };
+        jvars_text.lands.forEach(function(land, index){
+          pushableObject['cost-' + land.name] = 0;
         });
+        selectedCharacters.push(pushableObject);
 
         refreshTable();
+        disableProperty();
+
       }
       }
 
@@ -138,21 +149,33 @@
       jqCharacter.removeClass("selected");
 
       refreshTable();
+      disableProperty();
 
       }
 
       function refreshTable(){
 
-      $("#characters-table tr:not(:first)").remove();
-      selectedCharacters.forEach(function(character, index){
-        $("#characters-table").append("<tr>" +
-          "<td>" + character.name + "</td>" +
-          "<td><input type='color' class='color-select' character-index="+ index +"></td>" +
-          "<td>" + character.name + "</td>" +
-          "<td><input type='number' style='width: 40px' class='cost-input' character-index="+ index +"></td>" +
-        "</tr>");
+      $("#characters-table tr").remove();
+      selectedCharacters.forEach(function(character, charIndex){
+          let appendableRow = "<tr>" +
+          "<td>" + character.name + "</td>";
+
+          jvars_text.lands.forEach(function(land, landIndex){
+
+            let val = character['cost-' + land.name];
+            val = val === undefined ? 0 : val;
+
+            appendableRow += "<td><input type='number' style='width: 40px' class='cost-input' min='0' value=" + val +" land-name="+ land.name +" character-index="+ charIndex +"></td>"
+          });
+          appendableRow += "</tr>";
+
+         $("#characters-table").append(appendableRow);
       });
 
+      }
+
+      function disableProperty(){
+      selectedCharacters.length == 0 ? $("#next").attr('disabled', 'disabled') : $("#next").removeAttr('disabled');
       }
 
       $("#characters-table").on("input", ".color-select", function(colorSelect){
@@ -164,8 +187,9 @@
       $("#characters-table").on("input", ".cost-input", function(costInput){
       let jqTarget = $(costInput.currentTarget);
       let character = selectedCharacters[jqTarget.attr('character-index')];
-      character.cost = jqTarget.val();
+      character['cost-' + jqTarget.attr('land-name')] = jqTarget.val();
       });
+
 
     </script>
 {% endblock scripts %}

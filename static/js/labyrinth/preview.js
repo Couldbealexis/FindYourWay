@@ -67,7 +67,7 @@ function checkMaze(){
 
         swal({
           title: 'Do you want to continue?',
-          text: "Not all the lands has a name or a color (not default)",
+          text: "Not all the lands has a name or a color (not default) or you haven't set a begin and an end",
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',

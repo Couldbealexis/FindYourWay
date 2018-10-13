@@ -46,7 +46,6 @@
         <div class="row text-center col-12">
             <div class="input-group mb-3 col-3">
               <div class="input-group-prepend">
-    {#            <span class="input-group-text" id="basic-addon1">Inicio</span>#}
                 <button type="button" class="btn btn-primary btn-sm" onclick="selectBegin()" >
                     Begin
                 </button>
@@ -59,7 +58,6 @@
 
             <div class="input-group mb-3 col-3 col-lg-offset-1">
               <div class="input-group-prepend">
-    {#            <span class="input-group-text" id="basic-addon1">Inicio</span>#}
                 <button type="button" class="btn btn-primary btn-sm" onclick="selectEnd()">
                     End
                 </button>
@@ -99,9 +97,6 @@
                         <td id="{{ i.id }}">{{ i.id }}</td>
                         <td>
                             <div class="input-group mb-3">
-{#                              <div class="input-group-prepend">#}
-{#                                <span class="input-group-text" id="basic-addon1">{{ i.id }}</span>#}
-{#                              </div>#}
                               <input type="text"                        class="form-control"
                                      placeholder="{{ i.id }}"           aria-label="Username"
                                      aria-describedby="basic-addon1"    onkeyup="changeName(this)">

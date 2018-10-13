@@ -16,7 +16,7 @@
         <br>
         <div class="info text-center">
             <h4>
-                Congrats! You just upload your labirynth. Now is necessary that you set up the name and color for the lands.
+                Congrats! You just uploaded your labyrinth. Now is necessary you to set up the name and color for the lands.
             </h4>
             <h6>Good luck!</h6>
         </div>
@@ -44,7 +44,7 @@
         <br><br>
 
         <div class="row text-center col-12">
-            <div class="input-group mb-3 col-3">
+            <div class="input-group mb-4 col-4">
               <div class="input-group-prepend">
                 <button type="button" class="btn btn-primary btn-sm" onclick="selectBegin()" >
                     Begin
@@ -56,7 +56,7 @@
                      id="inputBegin">
             </div>
 
-            <div class="input-group mb-3 col-3 col-lg-offset-1">
+            <div class="input-group mb-4 col-4 col-lg-offset-1">
               <div class="input-group-prepend">
                 <button type="button" class="btn btn-primary btn-sm" onclick="selectEnd()">
                     End
@@ -123,10 +123,11 @@
         var maze = jvars.maze;
         var lands = jvars.lands;
 
-        begin = false;
-        end = false;
-        coordBegin = [];
-        coordEnd = [];
+        var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+        var begin = false;
+        var end = false;
+        var coordBegin = [];
+        var coordEnd = [];
 
     </script>
 {% endblock scripts %}

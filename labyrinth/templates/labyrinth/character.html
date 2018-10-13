@@ -1,8 +1,15 @@
 {% extends 'baseb4.html' %}
 {% load staticfiles %}
 
-
 {% block body %}
+
+<style>
+  .selected {
+    border: 3px solid blue;
+  }
+</style>
+
+
     <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
         <div class="header">
           <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
@@ -17,36 +24,37 @@
                 You have to select 1(min) to 4(max) <br>
             </h4>
             <br><br>
+
             <div class="row">
                 <div class="col-xs-6 col-md-3">
-                  <a href="#" class="thumbnail" onclick="check()" id="batman">
+                  <a href="#" class="thumbnail" onclick="check()" name="batman">
                     <img width="100px" height="80px" src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
                   </a>
-                  <a href="#" class="thumbnail" onclick="">
+                  <a href="#" class="thumbnail" name="Deadpool">
                     <img width="100px" height="80px" src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
                   </a>
-                  <a href="#" class="thumbnail" onclick="" id="">
+                  <a href="#" class="thumbnail" name="spiderman">
                     <img width="100px" height="80px" src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
                   </a>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
-                  <a href="#" class="thumbnail" onclick="">
+                  <a href="#" class="thumbnail" name="Captain America">
                     <img width="100px" height="80px" src="{%static 'img/characters/captain.jpg'%}" alt="Captain America">
                   </a>
-                  <a href="#" class="thumbnail" onclick="">
+                  <a href="#" class="thumbnail" name="Superman">
                     <img width="100px" height="80px" src="{%static 'img/characters/superman.jpg'%}" alt="Superman">
                   </a>
-                  <a href="#" class="thumbnail" onclick="">
+                  <a href="#" class="thumbnail" name="Ironman">
                     <img width="100px" height="80px" src="{%static 'img/characters/ironman.jpg'%}" alt="Ironman">
                   </a>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
-                  <a href="#" class="thumbnail" onclick="">
+                  <a href="#" class="thumbnail" name="Panther">
                     <img width="100px" height="80px" src="{%static 'img/characters/panther.jpg'%}" alt="Black Panther">
                   </a>
-                  <a href="#" class="thumbnail" onclick="">
+                  <a href="#" class="thumbnail" name="Joker">
                     <img width="100px" height="80px"src="{%static 'img/characters/joker.jpg'%}" alt="Joker">
                   </a>
                 </div>
@@ -61,10 +69,19 @@
 
 
     <div class="split right">
-        <div class="sideImg">
+        <!-- <div class="sideImg">
             <img src="{% static 'img/blueDoor.jpg' %}" alt="blueDor"  style="width: 100%; height: 100%;">
-        </div>
+        </div> -->
+
+        <table class="table" id="characters-table">
+          <th>Heroe</th>
+          <th>Color</th>
+          <th>Camino</th>
+          <th>Costo</th>
+        </table>
+
     </div>
+
 {% endblock %}
 
 
@@ -87,5 +104,68 @@
               confirmButtonText: 'I understand'
             })
         }
+    </script>
+    <script type="text/javascript">
+
+      let selectedCharacters = Array();
+
+      $(".thumbnail").on("click", function(e){
+        let jqCharacter = $(e.currentTarget);
+        jqCharacter.hasClass("selected") ?
+        deselectACharacter(jqCharacter) : selectACharacter(jqCharacter);
+      });
+
+      function selectACharacter(jqCharacter){
+      if(selectedCharacters.length < 4){
+        jqCharacter.addClass("selected");
+
+        selectedCharacters.push({
+          'name': jqCharacter.attr('name'),
+          'color': "#000",
+          'cost': "0"
+        });
+
+        refreshTable();
+      }
+      }
+
+      function deselectACharacter(jqCharacter){
+      let foundIndex = selectedCharacters.findIndex(function(element){
+        return element.name == jqCharacter.attr("name");
+      });
+
+      selectedCharacters.splice( foundIndex, 1 );
+      jqCharacter.removeClass("selected");
+
+      refreshTable();
+
+      }
+
+      function refreshTable(){
+
+      $("#characters-table tr:not(:first)").remove();
+      selectedCharacters.forEach(function(character, index){
+        $("#characters-table").append("<tr>" +
+          "<td>" + character.name + "</td>" +
+          "<td><input type='color' class='color-select' character-index="+ index +"></td>" +
+          "<td>" + character.name + "</td>" +
+          "<td><input type='number' style='width: 40px' class='cost-input' character-index="+ index +"></td>" +
+        "</tr>");
+      });
+
+      }
+
+      $("#characters-table").on("input", ".color-select", function(colorSelect){
+      let jqTarget = $(colorSelect.currentTarget);
+      let character = selectedCharacters[jqTarget.attr('character-index')];
+      character.color = jqTarget.val();
+      });
+
+      $("#characters-table").on("input", ".cost-input", function(costInput){
+      let jqTarget = $(costInput.currentTarget);
+      let character = selectedCharacters[jqTarget.attr('character-index')];
+      character.cost = jqTarget.val();
+      });
+
     </script>
 {% endblock scripts %}

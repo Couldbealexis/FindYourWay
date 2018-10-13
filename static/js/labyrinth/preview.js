@@ -1,15 +1,14 @@
-
 $(document).ready(function (){
     $(".cell").css("background-color", "grey");
     $(".Hcell").css("background-color", "grey");
     var arr = $.find("div[data-letter]");
-    var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     $(arr).each(function(){
         $(this).text(
             alphabet[ $(this).attr('data-letter') ]
         )
     })
 });
+
 
 function changeName(event) {
     var idx = $(event).attr('placeholder');
@@ -86,28 +85,32 @@ function checkMaze(){
     }
 }
 
+
 function selectBegin() {
     begin = true;
     end = false;
 }
+
 
 function selectEnd() {
     end = true;
     begin = false;
 }
 
+
 function selectCell(x, y){
-    // console.log(x, y);
+    var letterX = alphabet[x];
+    var pos = letterX + "," + y.toString() + " (" + x.toString() + "," + y.toString() + ")";
     if(begin){
-        $('#inputBegin').val(x.toString() + "," + y.toString());
+        $('#inputBegin').val(pos);
         coordBegin.push(x);
         coordBegin.push(y);
-        begin = false
+        begin = false;
     }
     else if(end){
-        $('#inputEnd').val(x.toString() + "," + y.toString());
+        $('#inputEnd').val(pos);
         coordEnd.push(x);
         coordEnd.push(y);
-        end = false
+        end = false;
     }
 }

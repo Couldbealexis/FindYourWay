@@ -88,26 +88,20 @@ def upload_maze(request):
         if archive.name.endswith('.txt'):
             res = handle_file(archive)
             if res['data']:
-                print('on data')
                 data = {
-                        "data" : res['data']
+                        "data": res['data']
                        }
                 template = './labyrinth/preview.html'
             else:
-                print('no data')
                 data = {
                         "message": res['message'],
                         "error": "1"
                        }
         else:
-            print('no txt')
             data = {
                     "message": "archive must be a .txt",
                     "error": "1"
                    }
-    print(data)
-    print(template)
-
     return render(request, template, context=data)
 
 

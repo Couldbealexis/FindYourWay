@@ -1,74 +1,73 @@
 {% extends 'baseb4.html' %}
 {% load staticfiles %}
 
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/labyrinth/character.css' %}">
+{% endblock %}
+
+
 {% block body %}
 
-<style>
-  .selected {
-    border: 3px solid blue;
-  }
-</style>
-
-
-    <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
+    <div class="split35 left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
         <div class="header">
           <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
           <h1>Find your way!</h1>
         </div>
         <br>
 
-        <div class="centered text-center">
+        <div class="centered text-center instructions">
             <h2 class="text-center">¡Select Your Character!</h2>
             <br>
             <h4 class="text-center">
                 You have to select 1(min) to 4(max) <br>
             </h4>
             <br><br>
-
+        
             <div class="row">
-                <div class="col-xs-6 col-md-3">
-                  <a href="#" class="thumbnail" onclick="check()" name="batman">
-                    <img width="100px" height="80px" src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
-                  </a>
-                  <a href="#" class="thumbnail" name="Deadpool">
-                    <img width="100px" height="80px" src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
-                  </a>
-                  <a href="#" class="thumbnail" name="spiderman">
-                    <img width="100px" height="80px" src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
-                  </a>
-                </div>
-
-                <div class="col-xs-6 col-md-3">
-                  <a href="#" class="thumbnail" name="Captain America">
-                    <img width="100px" height="80px" src="{%static 'img/characters/captain.jpg'%}" alt="Captain America">
-                  </a>
-                  <a href="#" class="thumbnail" name="Superman">
-                    <img width="100px" height="80px" src="{%static 'img/characters/superman.jpg'%}" alt="Superman">
-                  </a>
-                  <a href="#" class="thumbnail" name="Ironman">
-                    <img width="100px" height="80px" src="{%static 'img/characters/ironman.jpg'%}" alt="Ironman">
-                  </a>
-                </div>
-
-                <div class="col-xs-6 col-md-3">
-                  <a href="#" class="thumbnail" name="Panther">
-                    <img width="100px" height="80px" src="{%static 'img/characters/panther.jpg'%}" alt="Black Panther">
-                  </a>
-                  <a href="#" class="thumbnail" name="Joker">
-                    <img width="100px" height="80px"src="{%static 'img/characters/joker.jpg'%}" alt="Joker">
-                  </a>
-                </div>
-
-                <div >
-                  <a disabled="disabled" id="next" class="btn btn-primary btn-lg vcenter">¡Next!</a>
-                </div>
-
+              <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail" onclick="check()" name="batman">
+                  <img width="100px" height="80px" src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
+                </a>
+                <a href="#" class="thumbnail" name="Deadpool">
+                  <img width="100px" height="80px" src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
+                </a>
+                <a href="#" class="thumbnail" name="spiderman">
+                  <img width="100px" height="80px" src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
+                </a>
               </div>
+
+              <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail" name="Captain America">
+                  <img width="100px" height="80px" src="{%static 'img/characters/captain.jpg'%}" alt="Captain America">
+                </a>
+                <a href="#" class="thumbnail" name="Superman">
+                  <img width="100px" height="80px" src="{%static 'img/characters/superman.jpg'%}" alt="Superman">
+                </a>
+                <a href="#" class="thumbnail" name="Ironman">
+                  <img width="100px" height="80px" src="{%static 'img/characters/ironman.jpg'%}" alt="Ironman">
+                </a>
+              </div>
+
+              <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail" name="Panther">
+                  <img width="100px" height="80px" src="{%static 'img/characters/panther.jpg'%}" alt="Black Panther">
+                </a>
+                <a href="#" class="thumbnail" name="Joker">
+                  <img width="100px" height="80px"src="{%static 'img/characters/joker.jpg'%}" alt="Joker">
+                </a>
+              </div>
+
+              <div >
+                <a disabled="disabled" id="next" class="btn btn-primary btn-lg vcenter">¡Next!</a>
+              </div>
+
+            </div>
         </div>
     </div>
 
 
-    <div class="split right">
+    <div class="split65 right">
         <!-- <div class="sideImg">
             <img src="{% static 'img/blueDoor.jpg' %}" alt="blueDor"  style="width: 100%; height: 100%;">
         </div> -->
@@ -82,8 +81,6 @@
 
 
 {% block scripts %}
-    <script src="{% static 'js/labyrinth/upload.js' %}"></script>
-
     <script type="text/javascript">
         var one ;
         var err_flag = false;
@@ -94,7 +91,7 @@
         if(jvars.error == 1){
            swal({
               title: 'Oh no!',
-              {#text: "It seems that your Labirynth isn't correct.",#}
+              // text: "It seems that your Labirynth isn't correct.",
               text: jvars.message,
               type: 'error',
               confirmButtonColor: '#3085d6',

@@ -1,19 +1,21 @@
 from django.db import models
 from django import forms
 
+
 response = {
-    "code":'',
-    "data":'',
-    "message":''
+    "code": '',
+    "data": '',
+    "message": ''
 }
+
 
 def clean_response():
     response['code'] = ''
     response['message'] = ''
     response['data'] = ''
 
-class Land:
 
+class Land:
     def __init__(self, id, color="808080", image=""):
         self.id = id
         self.name = str(id)
@@ -24,7 +26,7 @@ class Land:
         return self.name
 
     def info(self):
-        return { "id" : self.id, "name" : self.name, "color": self.color, "image": self.image }
+        return {"id": self.id, "name": self.name, "color": self.color, "image": self.image}
 
 
 class UploadFileForm(forms.Form):

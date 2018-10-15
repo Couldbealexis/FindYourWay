@@ -8,7 +8,7 @@
 
 
 {% block body %}
-    <div class="split75 left" onkeydown="whichButton(event)">
+    <div id="leftSide" class="split75 left" onkeydown="whichButton(event)">
         <div class="header">
           <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
           <h1>Find your way!</h1>
@@ -16,28 +16,10 @@
         <br>
 
         <br><br>
-        <div class="row">
+        <div id="mazeHeader" class="row">
             <div class="Hcell">
             </div>
-            {% for i in maze.1 %}
-                <div class="Hcell" data-letter="{{ forloop.counter0 }}" >
-
-                </div>
-            {% endfor %}
         </div>
-        {% for i in maze %}
-            {% with row=forloop.counter0 %}
-            <div class="row">
-                <div class="Hcell">
-                    {{ forloop.counter }}
-                </div>
-                {% for val in i %}
-                    <div data-id="{{ val }}" data-row="{{ row }}" data-column="{{ forloop.counter0 }}" onclick="selectCell( {{ forloop.counter0 }}, {{ row }} )" class="cell"> {{ val }} </div>
-                {% endfor %}
-            </div>
-            {% endwith %}
-        {% endfor %}
-        <br><br>
 
 
     </div>
@@ -51,63 +33,35 @@
 
 {% block scripts %}
     <script src="{% static 'js/labyrinth/play.js' %}"></script>
-    <script type="text/javascript">
-        var mazeList = (("{{maze |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
-            return {
-                l   : '<',
-                g   : '>',
-                quo : '"'
-            }[b];
-        }));
-        mazeList = mazeList.replace(/u'/g, '\'');
-        mazeList = mazeList.replace(/'/g, '\"');
-        maze = JSON.parse( mazeList );
-
-        var landList = (("{{lands |safe}}").replace(/&(l|g|quo)t;/g, function(a,b){
-            return {
-                l   : '<',
-                g   : '>',
-                quo : '"'
-            }[b];
-        }));
-        landList = landList.replace(/u'/g, '\'');
-        landList = landList.replace(/'/g, '\"');
-        lands = JSON.parse( landList );
-
-        begin = false;
-        end = false;
-
-        coordBegin = [0,0];
-        coordEnd = [4,4];
-        current = [0,0];
-
-
-    </script>
 
     <script>
-          //cuando presiona una tecla
-          function whichButton(event)
-          {
-              if(event.keyCode=='39')
-              {//si la tecla presionada es direccional derecho
+        var maze = [];
+        var lands = [];
+
+        var begin = [];
+        var end = [];
+      //cuando presiona una tecla
+        function whichButton(event){
+            if(event.keyCode=='39')
+            {//si la tecla presionada es direccional derecho
                 console.log('derecha')
-              }
+            }
 
-              if(event.keyCode=='37')
-              {//si la tecla presionada es direccional izquierdo
+            if(event.keyCode=='37')
+            {//si la tecla presionada es direccional izquierdo
                 console.log('izquierda')
-              }
+            }
 
-              if(event.keyCode=='38')
-              {//si la tecla presionada es direccional arriba
+            if(event.keyCode=='38')
+            {//si la tecla presionada es direccional arriba
                 console.log('arriba')
-              }
+            }
 
-              if(event.keyCode=='40')
-              {// si la tecla presionada es direccional abajo
+            if(event.keyCode=='40')
+            {// si la tecla presionada es direccional abajo
                 console.log('abajo')
-              }
-          }
+            }
+        }
     </script>
 
 

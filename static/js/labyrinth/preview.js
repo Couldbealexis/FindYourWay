@@ -51,22 +51,29 @@ function update(jscolor, event) {
 
 }
 
+$('#btnNext').click(function(){
+    if ($('#inputBegin').val() == "" || $('#inputEnd').val() == ""){
+        swal({
+          title: "You can't continue",
+          text: "You haven't define a start or end point",
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Oh no!'
+        });
+        return;
+    }
 
-function checkMaze(){
     var incomplete = false;
     lands.find(function (element) {
         if (element.name == element.id || element.color == "808080"){
             incomplete = true;
         }
     });
-    if ($('#inputBegin').val() == "" || $('#inputEnd').val() == ""){
-        incomplete = true;
-    }
     if(incomplete){
-
         swal({
           title: 'Do you want to continue?',
-          text: "Not all the lands has a name or a color (not default) or you haven't set a begin and an end",
+          text: "Not all the lands has a name or a color (not default)",
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -74,16 +81,21 @@ function checkMaze(){
           confirmButtonText: 'Yes, go ahead!'
         }).then(function(result) {
           if (result) {
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
+              incomplete = false;
           }
         })
 
     }
-}
+
+    if(!incomplete){
+        sessionStorage.clear();
+        sessionStorage.setItem('maze', JSON.stringify(maze));
+        sessionStorage.setItem('lands', JSON.stringify(lands));
+        sessionStorage.setItem('begin', JSON.stringify(coordBegin));
+        sessionStorage.setItem('end', JSON.stringify(coordEnd));
+        window.location.href = "/maze/play";
+    }
+});
 
 
 function selectBegin() {
@@ -102,12 +114,16 @@ function selectCell(x, y){
     var letterX = alphabet[x];
     var pos = letterX + "," + y.toString() + " (" + x.toString() + "," + y.toString() + ")";
     if(begin){
+        coordBegin.pop();
+        coordBegin.pop();
         $('#inputBegin').val(pos);
         coordBegin.push(x);
         coordBegin.push(y);
         begin = false;
     }
     else if(end){
+        coordEnd.pop();
+        coordEnd.pop();
         $('#inputEnd').val(pos);
         coordEnd.push(x);
         coordEnd.push(y);

@@ -1,9 +1,40 @@
 
 $(document).ready(function (){
+    var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+    maze = sessionStorage.getItem('maze');
+    maze = JSON.parse(maze);
+    lands = sessionStorage.getItem('lands');
+    lands = JSON.parse(lands);
+    begin = sessionStorage.getItem('begin');
+    begin = JSON.parse(begin);
+    end = sessionStorage.getItem('end');
+    end = JSON.parse(end);
+
+    var mazeHeader = document.getElementById('mazeHeader');
+    for(var i = 0; i < maze[1].length; i++){
+        var newDiv = document.createElement('div');
+        var att = document.createAttribute('data-letter');
+        var cls = document.createAttribute('class');
+        att.value = i;
+        cls.value = "Hcell";
+        newDiv.setAttributeNode(att);
+        newDiv.setAttributeNode(cls);
+        mazeHeader.appendChild(newDiv);
+    }
+
+    var leftSide = document.getElementById('leftSide');
+    for(var y=0; y<maze.length; y++){
+        var rowDiv = document.createElement('div');
+        var cls = document.createAttribute('class');
+        cls.value = "row";
+        rowDiv.setAttributeNode(cls);
+        leftSide.appendChild(rowDiv);
+    }
+
+
     $(".cell").css("background-color", "grey");
     $(".Hcell").css("background-color", "grey");
     var arr = $.find("div[data-letter]");
-    var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     $(arr).each(function(){
         $(this).text(
             alphabet[ $(this).attr('data-letter') ]
@@ -11,96 +42,5 @@ $(document).ready(function (){
     })
 });
 
-function changeName(event) {
-    var idx = $(event).attr('placeholder');
-    var arr = $.find("div[data-id='" + idx + "']");
-    var name = "";
-    if($(event).val()){
-            name = $(event).val();
-        }
-        else{
-             name = idx
-        }
-
-    $(arr).each(function(){
-        if($(event).val()){
-            $(this).text( $(event).val() )
-        }
-        else{
-             $(this).text( idx )
-        }
-    });
-    lands.find(function (element) {
-        if (element.id == idx){
-            element.name = name
-        }
-    });
-}
 
 
-function update(jscolor, event) {
-// 'jscolor' instance can be used as a string
-    var idx = $(event).attr('data-colorid');
-    var arr = $.find("div[data-id='" + idx + "']");
-
-    $(arr).css("background-color", '#' + jscolor);
-
-}
-
-
-function checkMaze(){
-    var incomplete = false;
-    lands.find(function (element) {
-        if (element.name == element.id || element.color == "808080"){
-            incomplete = true;
-        }
-    });
-    console.log(incomplete)
-    if(incomplete){
-
-        swal({
-          title: 'Do you want to continue?',
-          text: "Not all the lands has a name or a color (not default)",
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, go ahead!'
-        }).then(function(result) {
-          if (result) {
-            swal(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
-          }
-        })
-
-    }
-}
-
-function selectBegin() {
-    begin = true;
-    end = false;
-}
-
-function selectEnd() {
-    end = true;
-    begin = false;
-}
-
-function selectCell(x, y){
-    console.log(x, y)
-    if(begin){
-        $('#inputBegin').val(x.toString() + "," + y.toString())
-        coordBegin.append(x);
-        coordBegin.append(y);
-        begin = false
-    }
-    else if(end){
-        $('#inputEnd').val(x.toString() + "," + y.toString())
-        coordEnd.append(x);
-        coordEnd.append(y);
-        end = false
-    }
-}

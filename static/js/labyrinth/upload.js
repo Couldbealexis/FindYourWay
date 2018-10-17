@@ -10,15 +10,17 @@ $(function () {
             reader.onload = function(progressEvent){
                 var lines = this.result.split('\n');
                 for(var line = 0; line < lines.length; line++){
-                  var one_line = lines[line].split(',');
-                  for(var land =0; land<one_line.length; land++){
-                      one = one_line[land];
-                      one = parseFloat(one);
-                      if(isNaN(one)) {
-                          console.log(line, land, one);
-                          err_flag = true;
-                      }
-                  }
+                    if(lines[line].length > 1){
+                        var one_line = lines[line].split(',');
+                        for(var land =0; land<one_line.length; land++){
+                            one = one_line[land];
+                            one = parseFloat(one);
+                            if(isNaN(one)) {
+                                console.log(line, land, one);
+                                err_flag = true;
+                            }
+                        }
+                    }
                 }
                 if(err_flag == false){
                     $("button").prop("disabled", files_length == 0);

@@ -29,10 +29,34 @@ $(document).ready(function (){
         cls.value = "row";
         rowDiv.setAttributeNode(cls);
         leftSide.appendChild(rowDiv);
+        var rowNumber = document.createElement('div');
+        var rowNumberCls = document.createAttribute('class');
+        rowNumberCls.value = "Hcell";
+        rowNumber.textContent = (y+1).toString();
+        rowNumber.setAttributeNode(rowNumberCls);
+        rowDiv.appendChild(rowNumber);
+
+        for(var x=0; x<maze[y].length; x++){
+            var newMazeCell = document.createElement('div');
+            var attribRow = document.createAttribute('data-row');
+            var attribColumn = document.createAttribute('data-column');
+            var cls = document.createAttribute('class');
+            attribRow.value = y;
+            attribColumn.value = x;
+            cls.value = "cell";
+            newMazeCell.textContent = (maze[y][x]).toString();
+            newMazeCell.setAttributeNode(attribRow);
+            newMazeCell.setAttributeNode(attribColumn);
+            newMazeCell.setAttributeNode(cls);
+            if(x==0 && y==0){
+                newMazeCell.focus();
+            }
+            rowDiv.appendChild(newMazeCell);
+        }
     }
 
 
-    $(".cell").css("background-color", "grey");
+    // $(".cell").css("background-color", "grey");
     $(".Hcell").css("background-color", "grey");
     var arr = $.find("div[data-letter]");
     $(arr).each(function(){

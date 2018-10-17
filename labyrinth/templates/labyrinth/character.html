@@ -179,7 +179,11 @@
       }
 
 
-      
+      $("#characters-table").on("input", ".cost-input", function(costInput){
+      	let jqTarget = $(costInput.currentTarget);
+      	let character = selectedCharacters[jqTarget.attr('character-index')];
+      	character['cost-' + jqTarget.attr('land-name')] = jqTarget.val();
+      });
 
 
     </script>

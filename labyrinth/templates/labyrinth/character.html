@@ -23,7 +23,7 @@
                 You have to select 1(min) to 4(max) <br>
             </h4>
             <br><br>
-        
+
             <div class="row">
               <div class="col-xs-6 col-md-3">
                 <a href="#" class="thumbnail" onclick="check()" name="batman">
@@ -102,72 +102,75 @@
 
     <script type="text/javascript">
 
-      let jvars_text = {"maze":[["0.0","1.0","2.0","3.0","4.0","5.56"],["1.0","1.0","1.0","1.0","1.0","1.0"],["1.0","2.0","1.0","1.0","2.0","2.0"],["2.0","2.67","2.0","1.0","1.0","1.0"],["1.0","1.15","1.0","1.0","1.0","1.0"],["0.0","0.0","0.0","0.0","0.0","0.0"],["3.0","3.0","3.0","3.0","3.0","3.0"]],"lands":[{"id":"0.0","name":"fuego","color":"808080","image":""},{"id":"1.0","name":"tierra","color":"808080","image":""},{"id":"2.0","name":"agua","color":"808080","image":""},{"id":"3.0","name":"3.0","color":"808080","image":""},{"id":"4.0","name":"4.0","color":"808080","image":""},{"id":"5.56","name":"5.56","color":"808080","image":""},{"id":"2.67","name":"2.67","color":"808080","image":""},{"id":"1.15","name":"1.15","color":"808080","image":""}]};
+
+      // let jvars = {"maze":[["0.0","1.0","2.0","3.0","4.0","5.56"],["1.0","1.0","1.0","1.0","1.0","1.0"],["1.0","2.0","1.0","1.0","2.0","2.0"],["2.0","2.67","2.0","1.0","1.0","1.0"],["1.0","1.15","1.0","1.0","1.0","1.0"],["0.0","0.0","0.0","0.0","0.0","0.0"],["3.0","3.0","3.0","3.0","3.0","3.0"]],"lands":[{"id":"0.0","name":"fuego","color":"e61313","image":""},{"id":"1.0","name":"tierra","color":"808080","image":""},{"id":"2.0","name":"agua","color":"808080","image":""},{"id":"3.0","name":"3.0","color":"808080","image":""},{"id":"4.0","name":"4.0","color":"808080","image":""},{"id":"5.56","name":"5.56","color":"808080","image":""},{"id":"2.67","name":"2.67","color":"808080","image":""},{"id":"1.15","name":"1.15","color":"808080","image":""}]};
+      JSON.parse(localStorage.getItem("jvars"));
       let selectedCharacters = Array();
 
       setTableHeaders();
       function setTableHeaders(){
       $("#characters-table").append("<th>Heroe</th>")
-      jvars_text.lands.forEach(function(land, landIndex){
-        $("#characters-table").append("<th>" + land.name + "</th>")
-      });
+        jvars.lands.forEach(function(land, landIndex){
+        	let appendableRow = "<th><span style='color: #" + land.color + "'>" + land.name + "</span></th>"
+       		$("#characters-table").append(appendableRow);
+        });
       }
 
       $(".thumbnail").on("click", function(e){
-        let jqCharacter = $(e.currentTarget);
-        jqCharacter.hasClass("selected") ?
-        deselectACharacter(jqCharacter) : selectACharacter(jqCharacter);
+          let jqCharacter = $(e.currentTarget);
+          jqCharacter.hasClass("selected") ?
+          deselectACharacter(jqCharacter) : selectACharacter(jqCharacter);
       });
 
       function selectACharacter(jqCharacter){
 
-      if(selectedCharacters.length < 4){
+      	if(selectedCharacters.length < 4){
 
-        jqCharacter.addClass("selected");
+          jqCharacter.addClass("selected");
 
-        pushableObject = { 'name': jqCharacter.attr('name') };
-        jvars_text.lands.forEach(function(land, index){
-          pushableObject['cost-' + land.name] = 0;
-        });
-        selectedCharacters.push(pushableObject);
+          pushableObject = { 'name': jqCharacter.attr('name') };
+          jvars.lands.forEach(function(land, index){
+          	pushableObject['cost-' + land.name] = 0;
+          });
+          selectedCharacters.push(pushableObject);
 
-        refreshTable();
-        disableProperty();
+          refreshTable();
+        	disableProperty();
 
-      }
+        }
       }
 
       function deselectACharacter(jqCharacter){
-      let foundIndex = selectedCharacters.findIndex(function(element){
-        return element.name == jqCharacter.attr("name");
-      });
+      	let foundIndex = selectedCharacters.findIndex(function(element){
+        	return element.name == jqCharacter.attr("name");
+        });
 
-      selectedCharacters.splice( foundIndex, 1 );
-      jqCharacter.removeClass("selected");
+        selectedCharacters.splice( foundIndex, 1 );
+      	jqCharacter.removeClass("selected");
 
-      refreshTable();
-      disableProperty();
+        refreshTable();
+       	disableProperty();
 
       }
 
       function refreshTable(){
 
-      $("#characters-table tr").remove();
-      selectedCharacters.forEach(function(character, charIndex){
-          let appendableRow = "<tr>" +
-          "<td>" + character.name + "</td>";
+      	$("#characters-table tr").remove();
+        selectedCharacters.forEach(function(character, charIndex){
+        		let appendableRow = "<tr>" +
+          	"<td>" + character.name + "</td>";
 
-          jvars_text.lands.forEach(function(land, landIndex){
+            jvars.lands.forEach(function(land, landIndex){
 
-            let val = character['cost-' + land.name];
-            val = val === undefined ? 0 : val;
+            	let val = character['cost-' + land.name];
+              val = val === undefined ? 0 : val;
 
-            appendableRow += "<td><input type='number' style='width: 40px' class='cost-input' min='0' value=" + val +" land-name="+ land.name +" character-index="+ charIndex +"></td>"
-          });
-          appendableRow += "</tr>";
+            	appendableRow += "<td><input type='number' style='width: 40px' class='cost-input' min='0' value=" + val +" land-name="+ land.name +" character-index="+ charIndex +"></td>"
+            });
+            appendableRow += "</tr>";
 
-         $("#characters-table").append(appendableRow);
-      });
+           $("#characters-table").append(appendableRow);
+        });
 
       }
 
@@ -175,17 +178,8 @@
       selectedCharacters.length == 0 ? $("#next").attr('disabled', 'disabled') : $("#next").removeAttr('disabled');
       }
 
-      $("#characters-table").on("input", ".color-select", function(colorSelect){
-      let jqTarget = $(colorSelect.currentTarget);
-      let character = selectedCharacters[jqTarget.attr('character-index')];
-      character.color = jqTarget.val();
-      });
 
-      $("#characters-table").on("input", ".cost-input", function(costInput){
-      let jqTarget = $(costInput.currentTarget);
-      let character = selectedCharacters[jqTarget.attr('character-index')];
-      character['cost-' + jqTarget.attr('land-name')] = jqTarget.val();
-      });
+      
 
 
     </script>

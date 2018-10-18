@@ -58,11 +58,13 @@
                 </a>
               </div>
 
-              <div >
-                <a disabled="disabled" id="next" class="btn btn-primary btn-lg vcenter">¡Next!</a>
-              </div>
-
             </div>
+
+            <div >
+              <br>
+              <a disabled="disabled" id="next" class="btn btn-primary btn-lg vcenter">¡Next!</a>
+            </div>
+
         </div>
     </div>
 
@@ -104,7 +106,7 @@
 
 
       // let jvars = {"maze":[["0.0","1.0","2.0","3.0","4.0","5.56"],["1.0","1.0","1.0","1.0","1.0","1.0"],["1.0","2.0","1.0","1.0","2.0","2.0"],["2.0","2.67","2.0","1.0","1.0","1.0"],["1.0","1.15","1.0","1.0","1.0","1.0"],["0.0","0.0","0.0","0.0","0.0","0.0"],["3.0","3.0","3.0","3.0","3.0","3.0"]],"lands":[{"id":"0.0","name":"fuego","color":"e61313","image":""},{"id":"1.0","name":"tierra","color":"808080","image":""},{"id":"2.0","name":"agua","color":"808080","image":""},{"id":"3.0","name":"3.0","color":"808080","image":""},{"id":"4.0","name":"4.0","color":"808080","image":""},{"id":"5.56","name":"5.56","color":"808080","image":""},{"id":"2.67","name":"2.67","color":"808080","image":""},{"id":"1.15","name":"1.15","color":"808080","image":""}]};
-      JSON.parse(localStorage.getItem("jvars"));
+      jvars = JSON.parse(sessionStorage.getItem("jvars"));
       let selectedCharacters = Array();
 
       setTableHeaders();

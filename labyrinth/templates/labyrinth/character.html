@@ -9,7 +9,7 @@
 
 {% block body %}
 
-    <div class="split35 left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
+    <div class="split-left left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
         <div class="header">
           <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
           <h1>Find your way!</h1>
@@ -69,7 +69,7 @@
     </div>
 
 
-    <div class="split65 right">
+    <div class="split-right right">
         <!-- <div class="sideImg">
             <img src="{% static 'img/blueDoor.jpg' %}" alt="blueDor"  style="width: 100%; height: 100%;">
         </div> -->
@@ -106,13 +106,13 @@
 
 
       // let jvars = {"maze":[["0.0","1.0","2.0","3.0","4.0","5.56"],["1.0","1.0","1.0","1.0","1.0","1.0"],["1.0","2.0","1.0","1.0","2.0","2.0"],["2.0","2.67","2.0","1.0","1.0","1.0"],["1.0","1.15","1.0","1.0","1.0","1.0"],["0.0","0.0","0.0","0.0","0.0","0.0"],["3.0","3.0","3.0","3.0","3.0","3.0"]],"lands":[{"id":"0.0","name":"fuego","color":"e61313","image":""},{"id":"1.0","name":"tierra","color":"808080","image":""},{"id":"2.0","name":"agua","color":"808080","image":""},{"id":"3.0","name":"3.0","color":"808080","image":""},{"id":"4.0","name":"4.0","color":"808080","image":""},{"id":"5.56","name":"5.56","color":"808080","image":""},{"id":"2.67","name":"2.67","color":"808080","image":""},{"id":"1.15","name":"1.15","color":"808080","image":""}]};
-      jvars = JSON.parse(sessionStorage.getItem("jvars"));
+      let lands = JSON.parse(sessionStorage.getItem("lands"));
       let selectedCharacters = Array();
 
       setTableHeaders();
       function setTableHeaders(){
       $("#characters-table").append("<th>Heroe</th>")
-        jvars.lands.forEach(function(land, landIndex){
+        lands.forEach(function(land, landIndex){
         	let appendableRow = "<th><span style='color: #" + land.color + "'>" + land.name + "</span></th>"
        		$("#characters-table").append(appendableRow);
         });
@@ -131,7 +131,7 @@
           jqCharacter.addClass("selected");
 
           pushableObject = { 'name': jqCharacter.attr('name') };
-          jvars.lands.forEach(function(land, index){
+          lands.forEach(function(land, index){
           	pushableObject['cost-' + land.name] = 0;
           });
           selectedCharacters.push(pushableObject);
@@ -162,7 +162,7 @@
         		let appendableRow = "<tr>" +
           	"<td>" + character.name + "</td>";
 
-            jvars.lands.forEach(function(land, landIndex){
+            lands.forEach(function(land, landIndex){
 
             	let val = character['cost-' + land.name];
               val = val === undefined ? 0 : val;

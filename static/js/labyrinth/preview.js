@@ -80,20 +80,19 @@ $('#btnNext').click(function(){
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes, go ahead!'
         }).then(function(result) {
-          if (result) {
-              incomplete = false;
-          }
-        })
+          incomplete = false;
+          sessionStorage.clear();
+          sessionStorage.setItem('maze', JSON.stringify(maze));
+          sessionStorage.setItem('lands', JSON.stringify(lands));
+          sessionStorage.setItem('begin', JSON.stringify(coordBegin));
+          sessionStorage.setItem('end', JSON.stringify(coordEnd));
+          //window.location.href = "/maze/play";
+          window.location.href = "/maze/character";
+        }).catch(function(cancel){
+          console.log("catch");
+          incomplete = true;
+        });
 
-    }
-
-    if(!incomplete){
-        sessionStorage.clear();
-        sessionStorage.setItem('maze', JSON.stringify(maze));
-        sessionStorage.setItem('lands', JSON.stringify(lands));
-        sessionStorage.setItem('begin', JSON.stringify(coordBegin));
-        sessionStorage.setItem('end', JSON.stringify(coordEnd));
-        window.location.href = "/maze/play";
     }
 });
 

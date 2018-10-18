@@ -4,15 +4,15 @@
 
 .cell{
 	padding: 0;
-	height: 80px;
-	width: 80px;
+	height: 100px;
+	width: 100px;
 	display: inline-block;
 }
 
 .Hcell{
 	padding: 0;
-	height: 80px;
-	width: 80px;
+	height: 100px;
+	width: 100px;
 	display: inline-block;
 }
 
@@ -25,8 +25,8 @@
 
 .split75 .header img {
   float: left;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 
@@ -34,4 +34,8 @@
   position: relative;
   top: 18px;
   left: 10px;
+}
+
+div:focus {
+    background-color: Aqua;
 }

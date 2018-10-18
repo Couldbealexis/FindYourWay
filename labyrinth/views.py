@@ -59,7 +59,7 @@ def maze_properties(map):
 @csrf_exempt
 def index(request):
     template = './labyrinth/upload.html'
-    data = {"javascript_vars" : {
+    data = {"javascript_vars": {
         "message": "",
         "error": "0"
     }}
@@ -88,58 +88,22 @@ def upload_maze(request):
         if archive.name.endswith('.txt'):
             res = handle_file(archive)
             if res['data']:
-                print('on data')
                 data = {
-                        "data" : res['data']
+                        "data": res['data']
                        }
                 template = './labyrinth/preview.html'
             else:
-                print('no data')
                 data = {
                         "message": res['message'],
                         "error": "1"
                        }
         else:
-            print('no txt')
             data = {
                     "message": "archive must be a .txt",
                     "error": "1"
                    }
-    print(data)
-    print(template)
-
     return render(request, template, context=data)
 
-
-@csrf_exempt
-def preview_maze(request):
-
-    # Provitional for test
-    data = """0,1,2,3,4,5.5555
-1,1,1,1,1,1
-1,1.9999,1,1,2,2
-2,2.66946,2,1,1,1
-1,1.1499,1,1,1,1
-0,0,0,0,0,0
-3,3,3,3,3,3"""
-#     data = """0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15
-# 0,1,2,3,4,5.5555,6,7,8,9,10,11,12,13,14,15"""
-    lines = data.splitlines()
-    maze = []
-    for line in lines:
-        arr = line.split(',')
-        maze.append(arr)
-
-    context = maze_properties(maze)
-
-    return render(request, './labyrinth/preview.html', context=context )
-
-# Character por Isaac
 @csrf_exempt
 def character(request):
     template = './labyrinth/character.html'
@@ -149,22 +113,6 @@ def character(request):
     }}
     return render(request, template, context=data)
 
-
 @csrf_exempt
 def play(request):
-    data = """0,1,2,3,4,5.5555
-1,1,1,1,1,1
-1,1.9999,1,1,2,2
-2,2.66946,2,1,1,1
-1,1.1499,1,1,1,1
-0,0,0,0,0,0
-3,3,3,3,3,3"""
-    lines = data.splitlines()
-    maze = []
-    for line in lines:
-        arr = line.split(',')
-        maze.append(arr)
-
-    context = maze_properties(maze)
-
-    return render(request, './labyrinth/play.html', context=context)
+    return render(request, './labyrinth/play.html')

@@ -26,13 +26,13 @@
 
             <div class="row">
               <div class="col-xs-6 col-md-3">
-                <a href="#" class="thumbnail" onclick="check()" name="batman">
+                <a href="#" class="thumbnail" onclick="check()" name="Batman">
                   <img width="100px" height="80px" src="{%static 'img/characters/batman.jpg'%}" alt="Batman">
                 </a>
                 <a href="#" class="thumbnail" name="Deadpool">
                   <img width="100px" height="80px" src="{%static 'img/characters/deadpool.jpg'%}" alt="Deadpool">
                 </a>
-                <a href="#" class="thumbnail" name="spiderman">
+                <a href="#" class="thumbnail" name="Spiderman">
                   <img width="100px" height="80px" src="{%static 'img/characters/spiderman.jpg'%}" alt="Spiderman">
                 </a>
               </div>
@@ -103,9 +103,6 @@
     </script>
 
     <script type="text/javascript">
-
-
-      // let jvars = {"maze":[["0.0","1.0","2.0","3.0","4.0","5.56"],["1.0","1.0","1.0","1.0","1.0","1.0"],["1.0","2.0","1.0","1.0","2.0","2.0"],["2.0","2.67","2.0","1.0","1.0","1.0"],["1.0","1.15","1.0","1.0","1.0","1.0"],["0.0","0.0","0.0","0.0","0.0","0.0"],["3.0","3.0","3.0","3.0","3.0","3.0"]],"lands":[{"id":"0.0","name":"fuego","color":"e61313","image":""},{"id":"1.0","name":"tierra","color":"808080","image":""},{"id":"2.0","name":"agua","color":"808080","image":""},{"id":"3.0","name":"3.0","color":"808080","image":""},{"id":"4.0","name":"4.0","color":"808080","image":""},{"id":"5.56","name":"5.56","color":"808080","image":""},{"id":"2.67","name":"2.67","color":"808080","image":""},{"id":"1.15","name":"1.15","color":"808080","image":""}]};
       let lands = JSON.parse(sessionStorage.getItem("lands"));
       let selectedCharacters = Array();
 
@@ -185,6 +182,21 @@
       	let jqTarget = $(costInput.currentTarget);
       	let character = selectedCharacters[jqTarget.attr('character-index')];
       	character['cost-' + jqTarget.attr('land-name')] = jqTarget.val();
+      });
+
+      $("#next").on("click", function(){
+        if($(this).attr('disabled') === undefined)
+          window.location.href = "/maze/play";
+        else {
+          swal({
+            title: "Oooops!",
+            text: "You must select at least one character",
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          });
+        }
       });
 
 

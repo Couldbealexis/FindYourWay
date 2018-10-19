@@ -36,7 +36,9 @@
                     {{ forloop.counter }}
                 </div>
                 {% for val in i %}
-                    <div data-id="{{ val }}" data-row="{{ row }}" data-column="{{ forloop.counter0 }}" onclick="selectCell( {{ forloop.counter0 }}, {{ row }} )" class="cell"> {{ val }} </div>
+                    <div data-id="{{ val }}" data-row="{{ row }}" data-column="{{ forloop.counter0 }}" onclick="selectCell( {{ forloop.counter0 }}, {{ row }} )" class="cell">
+                        {{ val }}
+                    </div>
                 {% endfor %}
             </div>
             {% endwith %}

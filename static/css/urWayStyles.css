@@ -8,6 +8,13 @@
     overflow-x: hidden;
 }
 
+.splitCell{
+    height: 50%;
+    width: 50%;
+    top: 0;
+    overflow-x: hidden;
+}
+
 .split75{
     height: 100%;
     width: 75%;

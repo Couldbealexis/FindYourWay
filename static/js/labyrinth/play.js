@@ -48,8 +48,15 @@ $(document).ready(function (){
             newMazeCell.setAttributeNode(attribRow);
             newMazeCell.setAttributeNode(attribColumn);
             newMazeCell.setAttributeNode(cls);
+            newMazeCell.css("background-color", '#' + jscolor);
             if(x==0 && y==0){
-                newMazeCell.focus();
+                // newMazeCell.focus();
+                var tabIndex = document.createAttribute('tabIndex');
+                tabIndex.value = 1;
+                newMazeCell.setAttributeNode(tabIndex);
+                var idx = document.createAttribute('id');
+                idx.value = 2;
+                newMazeCell.setAttributeNode(idx);
             }
             rowDiv.appendChild(newMazeCell);
         }
@@ -64,6 +71,10 @@ $(document).ready(function (){
             alphabet[ $(this).attr('data-letter') ]
         )
     })
+    $('#2').click(function() {
+  $('#2').focus();
+});
+    $('#2').focus();
 });
 
 

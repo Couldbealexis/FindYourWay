@@ -1,0 +1,50 @@
+{% extends 'baseb4.html' %}
+{% load staticfiles %}
+
+
+<!-- {% block styles %}
+    <link rel="stylesheet" href="{% static 'css/labyrinth/character.css' %}">
+{% endblock %} -->
+
+
+{% block body %}
+
+    <div class="split-left left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br>
+
+        <div class="centered text-center instructions">
+            <h2 class="text-center">¡Tree!</h2>
+            <br>
+            <br><br>
+
+
+            <div >
+              <br>
+              <a disabled="disabled" id="next" class="btn btn-primary btn-lg vcenter">¡Next!</a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="split-right right">
+        <!-- <div class="sideImg">
+            <img src="{% static 'img/blueDoor.jpg' %}" alt="blueDor"  style="width: 100%; height: 100%;">
+        </div> -->
+
+        <table class="table" id="characters-table">
+        </table>
+
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script type="text/javascript" src="//sigmajs.org/assets/js/sigma.min.js"></script>
+
+{% endblock scripts %}

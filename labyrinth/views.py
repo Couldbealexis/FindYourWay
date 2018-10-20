@@ -116,3 +116,13 @@ def character(request):
 @csrf_exempt
 def play(request):
     return render(request, './labyrinth/play.html')
+
+
+@csrf_exempt
+def tree(request):
+    template = './labyrinth/tree.html'
+    data = {"javascript_vars" : {
+        "message": "",
+        "error": "0"
+    }}
+    return render(request, template, context=data)

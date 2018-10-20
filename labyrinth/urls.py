@@ -10,4 +10,5 @@ urlpatterns = [
 
     # Isaac
     path ('character', views.character, name='character'),
+    path ('tree', views.tree, name='tree'),
 ]

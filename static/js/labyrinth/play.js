@@ -76,12 +76,14 @@ $(document).ready(function (){
             land = findLandById(maze[y][x]);
             newMazeCell.style.backgroundColor = '#' + (land.color).toString();
             if(x==begin[0] && y==begin[1]){
-                txtDiv.textContent = "0";
+                txtDiv.textContent = "Inicio - ";
                 // newMazeCell.focus();
                 var tabIndex = document.createAttribute('tabIndex');
                 tabIndex.value = 1;
                 newMazeCell.setAttributeNode(tabIndex);
-
+            }
+            if(x==end[0] && y==end[1]){
+                txtDiv.textContent = "Final - ";
             }
             rowDiv.appendChild(newMazeCell);
             newMazeCell.appendChild(txtDiv);
@@ -105,21 +107,9 @@ $(document).ready(function (){
     $(idBegin).focus();
     currentPos = begin;
 
-
     // setting up the image
-    // var startID = begin.join('-') + 'image';
-    // playerImage = document.createElement('img');
-    // playerImage.setAttribute("src", srcImage);
-    // playerImage.setAttribute("id", "imagePlayer");
-    // playerImage.setAttribute("height", "100%");
-    // playerImage.setAttribute("width", "100%");
-    // playerImage.setAttribute("alt", "ironman");
-    // document.getElementById(startID).appendChild(playerImage);
-
     setPlayer();
     appendMove();
-    // var element = document.getElementById("imagePlayer");
-    // element.parentNode.removeChild(element);
 });
 
 
@@ -183,14 +173,18 @@ function appendMove() {
     var mov = {};
     mov.x = currentPos[0];
     mov.y = currentPos[1];
-    movs.push(mov)
+    movs.push(mov);
+    var target = document.getElementById(currentPos.join('-') + 'txt');
+    if (target.textContent.length > 0) {
+        target.textContent = target.textContent + ' ' + movs.length
+    }
+    else{
+        target.textContent = target.textContent + movs.length
+    }
 }
 
 
 function setPlayer(){
-    // var element = document.getElementById("imagePlayer");
-    // element.parentNode.removeChild(element);
-
     var playerPos = currentPos.join('-') + 'image';
     playerImage = document.createElement('img');
     playerImage.setAttribute("src", srcImage);

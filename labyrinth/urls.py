@@ -7,4 +7,5 @@ urlpatterns = [
     # path('preview/', views.preview_maze, name='preview'),
     path('upload', views.upload, name='index'),
     path('play/', views.play, name='play'),
+    path('character/', views.character, name='character'),
 ]

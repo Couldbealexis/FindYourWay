@@ -93,7 +93,7 @@ $('#btnNext').click(function(){
         sessionStorage.setItem('lands', JSON.stringify(lands));
         sessionStorage.setItem('begin', JSON.stringify(coordBegin));
         sessionStorage.setItem('end', JSON.stringify(coordEnd));
-        window.location.href = "/maze/play";
+        window.location.href = "/maze/character";
     }
 });
 

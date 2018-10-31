@@ -17,18 +17,19 @@ function setTableHeaders(){
 
 $(".thumbnail").on("click", function(e){
     var jqCharacter = $(e.currentTarget);
+    var characterSrc = e.currentTarget.getElementsByTagName('img')[0].src;
     jqCharacter.hasClass("selected") ?
-    deselectACharacter(jqCharacter) : selectACharacter(jqCharacter);
+    deselectACharacter(jqCharacter) : selectACharacter(jqCharacter, characterSrc);
 });
 
 
-function selectACharacter(jqCharacter){
+function selectACharacter(jqCharacter, characterSrc){
     if(selectedCharacters.length < 4){
         jqCharacter.addClass("selected");
 
-        pushableObject = { 'name': jqCharacter.attr('name') };
+        var pushableObject = { 'name': jqCharacter.attr('name'), 'src': characterSrc };
         lands.forEach(function(land, index){
-            pushableObject['cost-' + land.name] = 0;
+            pushableObject[land.id] = 0;
         });
         selectedCharacters.push(pushableObject);
 
@@ -59,13 +60,13 @@ function refreshTable(){
         "<td>" + character.name + "</td>";
 
         lands.forEach(function(land, landIndex){
-            var val = character['cost-' + land.name];
+            var val = character[land.id];
             val = val === undefined ? 0 : val;
 
             appendableRow += "<td>" +
                 "<input type='number' style='width: 100%' class='cost-input' min='0' value="
-                + val +
-                " land-name=" + land.name + " character-index=" + charIndex + "></td>"
+                + val + " land-name=" + land.name +
+                " land-id=" + land.id + " character-index=" + charIndex + "></td>"
         });
         appendableRow += "</tr>";
 
@@ -83,22 +84,26 @@ function disableProperty(){
 $("#characters-table").on("input", ".cost-input", function(costInput){
     var jqTarget = $(costInput.currentTarget);
     var character = selectedCharacters[jqTarget.attr('character-index')];
-    character['cost-' + jqTarget.attr('land-name')] = jqTarget.val();
+    character[jqTarget.attr('land-id')] = jqTarget.val();
 });
 
 
 $("#next").on("click", function(){
-    if($(this).attr('disabled') === undefined)
+
+    if(selectedCharacters.length > 1){
+        sessionStorage.setItem('characters', JSON.stringify(selectedCharacters));
         window.location.href = "/maze/play";
-    else {
-      swal({
-        title: "Oooops!",
-        text: "You must select at least one character",
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-      });
     }
+    else {
+        swal({
+            title: "Oooops!",
+            text: "You must select at least one character",
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
+
 });
 

@@ -9,6 +9,22 @@ $(document).ready(function (){
     begin = JSON.parse(begin);
     end = sessionStorage.getItem('end');
     end = JSON.parse(end);
+    characters = sessionStorage.getItem('characters');
+    characters = JSON.parse(characters);
+
+    // get all the characters and draw them
+    var characters_row = document.getElementById('characters-row');
+    for (var i=0; i<characters.length; i++){
+        //var characterDiv = document.createElement('div');
+        //characterDiv.setAttribute('character-id', i);
+        var characterImage = document.createElement('img');
+        characterImage.setAttribute("src", characters[i].src);
+        characterImage.setAttribute("character-id", i);
+        characterImage.setAttribute("height", "100px");
+        characterImage.setAttribute("width", "100px");
+        characterImage.setAttribute("alt", characters[i]);
+        characters_row.appendChild(characterImage);
+    }
 
     // Get the Header columns [A|B|C|...]
     var mazeHeader = document.getElementById('mazeHeader');
@@ -191,7 +207,7 @@ function setPlayer(){
     playerImage.setAttribute("id", "imagePlayer");
     playerImage.setAttribute("height", "100%");
     playerImage.setAttribute("width", "100%");
-    playerImage.setAttribute("alt", "ironman");
+    playerImage.setAttribute("alt", "player");
     document.getElementById(playerPos).appendChild(playerImage);
 }
 

@@ -13,7 +13,11 @@
           <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
           <h1>Find your way!</h1>
         </div>
-        <br>
+        <br> <br>
+
+        <div id="characters-row" class="row">
+
+        </div>
 
         <br><br>
         <div id="mazeHeader" class="row">
@@ -44,6 +48,7 @@
         var currentPos = [];
         var playerImage;
         var movs = [];
+        var characters = [];
         var srcImage = "{% static 'img/characters/ironman.jpg' %}";
 
         // cuando presiona una tecla

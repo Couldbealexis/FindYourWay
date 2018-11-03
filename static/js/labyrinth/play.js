@@ -15,15 +15,36 @@ $(document).ready(function (){
     // get all the characters and draw them
     var characters_row = document.getElementById('characters-row');
     for (var i=0; i<characters.length; i++){
-        //var characterDiv = document.createElement('div');
-        //characterDiv.setAttribute('character-id', i);
+        // Parent Div
+        var characterDiv = document.createElement('div');
+        characterDiv.setAttribute('characterDiv-id', i);
+        characterDiv.setAttribute("style", "margin-right: 20px");
+        // Image
         var characterImage = document.createElement('img');
         characterImage.setAttribute("src", characters[i].src);
         characterImage.setAttribute("character-id", i);
         characterImage.setAttribute("height", "100px");
         characterImage.setAttribute("width", "100px");
-        characterImage.setAttribute("alt", characters[i]);
-        characters_row.appendChild(characterImage);
+        characterImage.setAttribute("alt", characters[i].name);
+        // Buttons
+        var buttonsDiv = document.createElement('div');
+        buttonsDiv.setAttribute('id', 'buttons-row');
+        buttonsDiv.setAttribute('class', 'row');
+        var infoBtn = document.createElement('button');
+        infoBtn.setAttribute('id', 'infoBtn');
+        infoBtn.setAttribute('character-btn', i);
+        infoBtn.setAttribute('class', 'btn btn-info btn-md');
+        infoBtn.textContent = 'Info';
+        var playBtn = document.createElement('button');
+        playBtn.setAttribute('id', 'playBtn');
+        playBtn.setAttribute('character-btn', i);
+        playBtn.setAttribute('class', 'btn btn-success btn-md');
+        playBtn.textContent = 'Play';
+        buttonsDiv.appendChild(infoBtn);
+        buttonsDiv.appendChild(playBtn);
+        characterDiv.appendChild(characterImage);
+        characterDiv.appendChild(buttonsDiv);
+        characters_row.appendChild(characterDiv);
     }
 
     // Get the Header columns [A|B|C|...]
@@ -180,8 +201,8 @@ function move(side){
         setPlayer();
     }
 
-    console.log(currentPos);
-    console.log(movs);
+    // console.log(currentPos);
+    // console.log(movs);
 }
 
 
@@ -210,4 +231,52 @@ function setPlayer(){
     playerImage.setAttribute("alt", "player");
     document.getElementById(playerPos).appendChild(playerImage);
 }
+
+
+$(document.body).on('click', '#infoBtn' ,function(e){
+    var selected = $(e.currentTarget);
+    swal({
+          title: characters[selected.attr("character-btn")].name,
+          html: createLandsTable(selected.attr("character-btn")),
+          imageUrl: characters[selected.attr("character-btn")].src,
+          imageWidth: 100,
+          imageHeight: 100,
+          animation: false
+        })
+});
+
+
+function createLandsTable(characterID){
+    var table = '<h5>Lands</h5>'+
+            '<table class="table">'+
+            '<thead class="thead-dark">'+
+                '<tr>'+
+                  '<th scope="col">ID</th>'+
+                  '<th scope="col">Name</th>'+
+                  '<th scope="col">Cost</th>'+
+                '</tr>'+
+            '</thead>'+
+            '<tbody>';
+
+    for (var i=0; i<lands.length; i++){
+        table += `<tr>
+            <td> ${lands[i].id} </td>
+            <td><span style='color: #${lands[i].color}'> ${lands[i].name} </span></td>
+            <td> ${characters[characterID][lands[i].id]} </td>
+            </tr>`
+    }
+    table +=`</tbody>
+    </table>`;
+    console.log(table);
+    return table
+}
+
+
+$(document.body).on('click', '#playBtn' ,function(e){
+    var selected = $(e.currentTarget);
+    selected[0].disabled = true;
+    document.getElementById('characterPlaying').textContent = "Now playing: " + characters[selected.attr("character-btn")].name;
+    document.getElementById('characterCost').textContent = "total cost: 0.00";
+    document.getElementById(begin.join('-')).focus();
+});
 

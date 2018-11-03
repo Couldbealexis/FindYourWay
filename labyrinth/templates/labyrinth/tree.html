@@ -17,7 +17,9 @@
         <br>
     </div>
 
-    <div id="network-graph"></div>
+    <div class="split-right right">
+        <div id="network-graph"></div>
+    </div>
 
 {% endblock %}
 
@@ -29,23 +31,44 @@
       data = {
         "nodes": [
           {
-            "id": "n0",
-            "label": "A node",
+            "id": "n1",
+            "label": "Node 1",
             "x": 0,
             "y": 0,
             "size": 3
           },
           {
-            "id": "n1",
-            "label": "Another node",
-            "x": -1,
+            "id": "n2",
+            "label": "Node 2",
+            "x": 1,
+            "y": -1,
+            "size": 3
+          },
+          {
+            "id": "n3",
+            "label": "Node 3",
+            "x": 1,
             "y": 1,
             "size": 3
           },
           {
-            "id": "n2",
-            "label": "And a last one",
+            "id": "n4",
+            "label": "Node 4",
+            "x": 2,
+            "y": -1,
+            "size": 3
+          },
+          {
+            "id": "n5",
+            "label": "Node 5",
             "x": 1,
+            "y": 0,
+            "size": 3
+          },
+          {
+            "id": "n6",
+            "label": "Node 6",
+            "x": 2,
             "y": 1,
             "size": 3
           }
@@ -53,19 +76,29 @@
         "edges": [
           {
             "id": "e0",
-            "source": "n0",
-            "target": "n1"
-          },
-          {
-            "id": "e1",
             "source": "n1",
             "target": "n2"
           },
           {
+            "id": "e1",
+            "source": "n1",
+            "target": "n3"
+          },
+          {
             "id": "e2",
             "source": "n2",
-            "target": "n0"
-          }
+            "target": "n4"
+          },
+          {
+            "id": "e3",
+            "source": "n1",
+            "target": "n5"
+          },
+          {
+            "id": "e4",
+            "source": "n3",
+            "target": "n6"
+          },
         ]
         }
         s = new sigma({

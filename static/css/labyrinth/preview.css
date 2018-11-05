@@ -1,0 +1,45 @@
+.row{
+	margin-left: 2em;
+}
+
+.cell{
+	padding: 0;
+	height: 100px;
+	width: 100px;
+	display: inline-block;
+}
+
+.Hcell{
+	padding: 0;
+	height: 100px;
+	width: 100px;
+	display: inline-block;
+}
+
+.cell:hover{
+	box-shadow: inset 0 0 6px green,
+				inset 0 0 2px green,
+				inset 0 0 15px green;
+}
+
+
+.split75 .header img {
+  float: left;
+  width: 80px;
+  height: 80px;
+}
+
+
+.split75 .header h1 {
+  position: relative;
+  top: 18px;
+  left: 10px;
+}
+
+.cell:focus {
+    background-color: Aqua;
+}
+
+/*#2:focus {*/
+	/*background: red !important;*/
+/*}*/

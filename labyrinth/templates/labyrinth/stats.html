@@ -1,0 +1,52 @@
+{% extends 'baseb4.html' %}
+{% load staticfiles %}
+
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/labyrinth/preview.css' %}">
+{% endblock %}
+
+
+{% block body %}
+    <div id="masterDiv" >
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br> <br>
+
+
+
+
+    </div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/labyrinth/stats.js' %}"></script>
+
+    <script>
+        //Session storage vars
+        var maze = [];
+        var lands = [];
+        var begin = [];
+        var end = [];
+        var characters = [];
+
+        var land;
+
+        // movs-in-the-game vars
+        var currentPos = [];
+        var player;
+        var playerImage;
+        var srcImage;
+        var goal;
+        var movs = [];
+
+    </script>
+
+
+
+{% endblock scripts %}

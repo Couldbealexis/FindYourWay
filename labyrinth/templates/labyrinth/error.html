@@ -1,0 +1,40 @@
+{% extends 'baseb4.html' %}
+{% load staticfiles %}
+
+
+{% block body %}
+    <div class="split left" id="firstDiv" data-js-vars="{{ javascript_vars | safe }}">
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" href="{% url 'labyrinth:index' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br>
+
+        <div class="centered text-center">
+            <h2 class="text-center">What!?</h2>
+            <br>
+            <h4 class="text-center">
+                Well, we didn't expect this. <br>
+                Feel free to start over again.
+                <br>
+                We are sorry.
+            </h4>
+            <br><br>
+            <a class="btn btn-primary btn-lg" href="{% url 'labyrinth:index' %}">
+                Go back to the start!
+            </a>
+        </div>
+    </div>
+
+
+    <div class="split right">
+        <div class="sideImg">
+            <img src="{% static 'img/mistake2.jpg' %}" alt="mistake"  style="width: 100%; height: 100%;">
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+
+{% endblock scripts %}

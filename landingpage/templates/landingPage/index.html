@@ -1,16 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'baseb4.html' %}
 {% load staticfiles %}
 
-{% block body %}
 
+{% block body %}
     <div class="split left">
-      Column one
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br>
+        <div class="centered">
+            <h2 class="text-center">Proyecto final para Inteligencia Artificial</h2>
+            <br>
+            <h4 class="text-center">
+                Sección: D03 <br>
+                César Alexis Gutiérrez González <br>
+                Isaac Hazael Villaseñor Cohen <br>
+                <br>
+                Maestra: Sulema Torres Ramos
+            </h4>
+            <br><br>
+            <div class="text-center">
+                <a class="btn btn-primary btn-lg text-center" href="{% url 'labyrinth:index' %}">
+                    Play!
+                </a>
+            </div>
+        </div>
     </div>
+
+
     <div class="split right">
         <div class="sideImg">
-            <img src="{% static "img/landingMaze.jpg" %}" alt="Maze" style="width: 100px; height: 100px;">
+            <img src="{% static 'img/landingMaze.jpg' %}" alt="landing"  style="width: 100%; height: 100%;">
         </div>
-
     </div>
-
 {% endblock %}
+

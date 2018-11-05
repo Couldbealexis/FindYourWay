@@ -1,0 +1,135 @@
+{% extends 'baseb4.html' %}
+{% load staticfiles %}
+
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/labyrinth/preview.css' %}">
+{% endblock %}
+
+
+{% block body %}
+    <div class="split75 left">
+        <div class="header">
+          <img src="{% static 'img/icons/urWay64alt.png' %}" alt="logo" />
+          <h1>Find your way!</h1>
+        </div>
+        <br>
+        <div class="info text-center">
+            <h4>
+                Congrats! You just uploaded your labyrinth. Now is necessary you to set up the name and color for the lands.
+            </h4>
+            <h6>Good luck!</h6>
+        </div>
+        <div class="row">
+            <div class="Hcell">
+            </div>
+            {% for i in data.maze.1 %}
+                <div class="Hcell" data-letter="{{ forloop.counter0 }}" >
+
+                </div>
+            {% endfor %}
+        </div>
+        {% for i in data.maze %}
+            {% with row=forloop.counter0 %}
+            <div class="row">
+                <div class="Hcell">
+                    {{ forloop.counter }}
+                </div>
+                {% for val in i %}
+                    <div data-id="{{ val }}" data-row="{{ row }}" data-column="{{ forloop.counter0 }}" onclick="selectCell( {{ forloop.counter0 }}, {{ row }} )" class="cell">
+                        {{ val }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endwith %}
+        {% endfor %}
+        <br><br>
+
+        <div class="row text-center col-12">
+            <div class="input-group mb-4 col-4">
+              <div class="input-group-prepend">
+                <button type="button" class="btn btn-primary btn-sm" onclick="selectBegin()" >
+                    Begin
+                </button>
+              </div>
+              <input type="text"                    class="form-control"
+                     placeholder="Begin"            aria-label="inicio"
+                     aria-describedby="basic-addon1" readonly="readonly"
+                     id="inputBegin">
+            </div>
+
+            <div class="input-group mb-4 col-4 col-lg-offset-1">
+              <div class="input-group-prepend">
+                <button type="button" class="btn btn-primary btn-sm" onclick="selectEnd()">
+                    End
+                </button>
+              </div>
+              <input type="text"                    class="form-control"
+                     placeholder="End"              aria-label="fin"
+                     aria-describedby="basic-addon1" readonly="readonly"
+                     id="inputEnd">
+            </div>
+
+        </div>
+
+
+        <div class="row text-center">
+            <div class="col-12">
+                <button id="btnNext" type="button" class="btn btn-primary btn-lg">
+                    Continue
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="split25 right">
+         <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Color</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for i in data.lands %}
+                    <tr>
+                        <td id="{{ i.id }}">{{ i.id }}</td>
+                        <td>
+                            <div class="input-group mb-3">
+                              <input type="text"                        class="form-control"
+                                     placeholder="{{ i.id }}"           aria-label="Username"
+                                     aria-describedby="basic-addon1"    onkeyup="changeName(this)">
+                            </div>
+                        </td>
+                        <td>
+                            <input data-colorID="{{ i.id }}" class="jscolor" onchange="update(this.jscolor, this)" value="808080">
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <tr></tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/labyrinth/preview.js' %}"></script>
+    <script src="{% static 'js/colorpicker/jscolor.js' %}"></script>
+    <script type="text/javascript">
+        var jvars = {{ data |safe}};
+        var maze = jvars.maze;
+        var lands = jvars.lands;
+
+        var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+        var begin = false;
+        var end = false;
+        var coordBegin = [];
+        var coordEnd = [];
+
+    </script>
+{% endblock scripts %}

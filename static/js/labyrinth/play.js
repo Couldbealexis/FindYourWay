@@ -116,16 +116,18 @@ $(document).ready(function (){
             newMazeCell.setAttributeNode(idx);
 
             land = findLandById(maze[y][x]);
-            newMazeCell.style.backgroundColor = '#' + (land.color).toString();
+            newMazeCell.style.backgroundColor = '#808080';
             if(x==begin[0] && y==begin[1]){
                 txtDiv.textContent = "Inicio - ";
                 // newMazeCell.focus();
                 var tabIndex = document.createAttribute('tabIndex');
                 tabIndex.value = 1;
+                // newMazeCell.style.backgroundColor = '#' + (land.color).toString();
                 newMazeCell.setAttributeNode(tabIndex);
             }
             if(x==end[0] && y==end[1]){
                 txtDiv.textContent = "Final - ";
+                // newMazeCell.style.backgroundColor = '#' + (land.color).toString();
             }
             rowDiv.appendChild(newMazeCell);
             newMazeCell.appendChild(txtDiv);
@@ -142,16 +144,39 @@ $(document).ready(function (){
         )
     });
 
-    // var idBegin = '#' + begin.join('-');
-    // $(idBegin).click(function() {
-    //   $(idBegin).focus();
-    // });
-    // $(idBegin).focus();
-    // currentPos = begin;
-
-    // setting up the image
+    colorCell(begin[0], begin[1]);
+    colorCell(end[0], end[1]);
 
 });
+
+
+// set the color to all the cell
+function colorCell(x,y){
+    let cell = document.getElementById(x.toString() + '-' + y.toString());
+    cell.style.backgroundColor = '#' + findLandById(cell.getAttribute('data-land')).color;
+    // right cell
+    if(parseInt(x) + 1 < maze["0"].length){
+        let rigthCell = document.getElementById((parseInt(x) + 1).toString() + '-' + y.toString());
+        rigthCell.style.backgroundColor = '#' + findLandById(rigthCell.getAttribute('data-land')).color;
+    }
+    // left cell
+    if(x > 0){
+        let leftCell = document.getElementById((parseInt(x) - 1).toString() + '-' + y.toString());
+        leftCell.style.backgroundColor = '#' + findLandById(leftCell.getAttribute('data-land')).color;
+    }
+    // up cell
+    if(y > 0){
+        let upCell = document.getElementById(x.toString() + '-' + (parseInt(y) -1).toString());
+        upCell.style.backgroundColor = '#' + findLandById(upCell.getAttribute('data-land')).color;
+    }
+    // down cell
+    if(parseInt(y) + 1 < maze.length){
+        let upCell = document.getElementById(x.toString() + '-' + (parseInt(y) +1).toString());
+        upCell.style.backgroundColor = '#' + findLandById(upCell.getAttribute('data-land')).color;
+    }
+
+}
+
 
 // given an id returns the id with that id
 function findLandById(search){
@@ -167,7 +192,7 @@ function findLandById(search){
 // move the player
 function move(side){
     var validPos = false;
-    var nextPos = [];
+    let nextPos = [];
     let zeroPos = parseInt(currentPos[0].toString());
     let onePos = parseInt(currentPos[1].toString());
     nextPos.push(zeroPos);
@@ -214,6 +239,7 @@ function move(side){
             totalCost = parseFloat(totalCost) + parseFloat(player[land.id]);
             //console.log(totalCost);
             currentPos = nextPos;
+            colorCell(currentPos[0], currentPos[1]);
             appendMove();
             var element = document.getElementById("imagePlayer");
             element.parentNode.removeChild(element);
@@ -396,6 +422,7 @@ function cleanMap(){
     for(y=0; y<maze.length; y++){
         for(x=0; x<maze[y].length; x++){
             var pos = `${x.toString()}-${y.toString()}`;
+            document.getElementById(pos).style.backgroundColor = '#808080';
             var txtDiv = document.getElementById(pos+'txt');
             txtDiv.textContent = "";
             if(x==begin[0] && y==begin[1]){
@@ -406,6 +433,8 @@ function cleanMap(){
             }
         }
     }
+    colorCell(begin[0], begin[1]);
+    colorCell(end[0], end[1]);
     // clean image
     try {
         var imgDiv = document.getElementById("imagePlayer");

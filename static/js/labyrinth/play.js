@@ -11,6 +11,7 @@ $(document).ready(function (){
     end = JSON.parse(end);
     characters = sessionStorage.getItem('characters');
     characters = JSON.parse(characters);
+    sessionStorage.removeItem('playedCharacters');
 
     // get all the characters and draw them
     var characters_row = document.getElementById('characters-row');
@@ -67,6 +68,7 @@ $(document).ready(function (){
         var cls = document.createAttribute('class');
         cls.value = "row";
         rowDiv.setAttributeNode(cls);
+        rowDiv.setAttribute('id', `row${y}`);
         leftSide.appendChild(rowDiv);
         var rowNumber = document.createElement('div');
         var rowNumberCls = document.createAttribute('class');
@@ -80,11 +82,13 @@ $(document).ready(function (){
             var newMazeCell = document.createElement('div');
             var attribRow = document.createAttribute('data-row');
             var attribColumn = document.createAttribute('data-column');
+            var attribLand = document.createAttribute('data-land');
             var cls = document.createAttribute('class');
             var idx = document.createAttribute('id');
             idx.value = x.toString() + '-' + y.toString();
             attribRow.value = y;
             attribColumn.value = x;
+            attribLand.value = maze[y][x];
             cls.value = "cell";
 
             // setting divs for text and image in every cell
@@ -107,6 +111,7 @@ $(document).ready(function (){
 
             newMazeCell.setAttributeNode(attribRow);
             newMazeCell.setAttributeNode(attribColumn);
+            newMazeCell.setAttributeNode(attribLand);
             newMazeCell.setAttributeNode(cls);
             newMazeCell.setAttributeNode(idx);
 
@@ -137,19 +142,18 @@ $(document).ready(function (){
         )
     });
 
-    var idBegin = '#' + begin.join('-');
-    $(idBegin).click(function() {
-      $(idBegin).focus();
-    });
-    $(idBegin).focus();
-    currentPos = begin;
+    // var idBegin = '#' + begin.join('-');
+    // $(idBegin).click(function() {
+    //   $(idBegin).focus();
+    // });
+    // $(idBegin).focus();
+    // currentPos = begin;
 
     // setting up the image
-    setPlayer();
-    appendMove();
+
 });
 
-
+// given an id returns the id with that id
 function findLandById(search){
     for(var i = 0; i<lands.length; i++){
         if(lands[i].id == search ){
@@ -160,52 +164,67 @@ function findLandById(search){
 }
 
 
+// move the player
 function move(side){
     var validPos = false;
+    var nextPos = currentPos;
     if(side=='39')
-    {//si la tecla presionada es direccional derecho
+    {//si la tecla presionada es derecha
         if(currentPos[0] + 1 < maze["0"].length){
-            currentPos[0] = currentPos[0] + 1;
+            nextPos[0] = nextPos[0] + 1;
             validPos = true;
+
         }
     }
 
     if(side=='37')
-    {//si la tecla presionada es direccional izquierdo
+    {//si la tecla presionada es izquierda
         if(currentPos[0] > 0){
-            currentPos[0] = currentPos[0] - 1;
-            validPos = true;
+            nextPos[0] = nextPos[0] - 1;
+                validPos = true;
         }
     }
 
     if(side=='38')
-    {//si la tecla presionada es direccional arriba
+    {//si la tecla presionada es arriba
         if(currentPos[1] > 0){
-            currentPos[1] = currentPos[1] - 1;
+            nextPos[1] = nextPos[1] - 1;
             validPos = true;
         }
     }
 
     if(side=='40')
-    {// si la tecla presionada es direccional abajo
+    {// si la tecla presionada es abajo
         if(currentPos[1] + 1 < maze.length){
-            currentPos[1] = currentPos[1] + 1;
+            nextPos[1] = nextPos[1] + 1;
             validPos = true;
         }
     }
 
+    // if the next pos is valid, go
     if(validPos){
-        appendMove();
-        var element = document.getElementById("imagePlayer");
-        element.parentNode.removeChild(element);
-        setPlayer();
-    }
+        var nextCell = document.getElementById(nextPos.join('-'));
+        land = findLandById(nextCell.getAttribute('data-land'));
+        if(player[land.id] >= 0){
+            //console.log(totalCost);
+            totalCost = parseFloat(totalCost) + parseFloat(player[land.id]);
+            //console.log(totalCost);
+            currentPos = nextPos;
+            appendMove();
+            var element = document.getElementById("imagePlayer");
+            element.parentNode.removeChild(element);
+            setPlayer();
+            setCost(totalCost);
+            if(JSON.stringify(currentPos) === JSON.stringify(end)){
+                goalReached(true)
+            }
+        }
 
-    // console.log(currentPos);
-    // console.log(movs);
+    }
 }
 
 
+// an array with all the movs is created
 function appendMove() {
     var mov = {};
     mov.x = currentPos[0];
@@ -221,6 +240,7 @@ function appendMove() {
 }
 
 
+// Once the player movs, set the image in the map
 function setPlayer(){
     var playerPos = currentPos.join('-') + 'image';
     playerImage = document.createElement('img');
@@ -246,6 +266,51 @@ $(document.body).on('click', '#infoBtn' ,function(e){
 });
 
 
+// The goal is reached and the player is appended to the session storage
+function goalReached(reached) {
+    goal = true;
+    var playedCharacters = sessionStorage.getItem('playedCharacters');
+    playedCharacters = JSON.parse(playedCharacters);
+    player.totalCost = totalCost;
+    player.reachGoal = reached;
+    player.movs = movs;
+    if(!playedCharacters){
+        playedCharacters = [];
+    }
+    playedCharacters.push(player);
+    var playedCharactersString = JSON.stringify(playedCharacters);
+    sessionStorage.removeItem('playedCharacters');
+    sessionStorage.setItem('playedCharacters', playedCharactersString);
+    if(reached){
+        swal({
+            title: player.name + ' just reach the goal',
+            text: `The total cost was: ${totalCost}`,
+            type: 'success'
+        });
+    }
+    player = undefined;
+    if(playedCharacters.length == characters.length-1 || characters.length == playedCharacters.length){
+        var leftSide = document.getElementById('leftSide');
+
+        var buttonDiv = document.getElementById('nextBtnDiv');
+        if(!buttonDiv){
+            buttonDiv = document.createElement('div');
+            buttonDiv.setAttribute('id', 'nextBtnDiv');
+            buttonDiv.setAttribute('class', 'row');
+            buttonDiv.setAttribute('style', 'margin-top:20px');
+            var nextBtn = document.createElement('button');
+            nextBtn.setAttribute('id', 'nextBtn');
+            nextBtn.setAttribute('class', 'btn btn-primary btn-md');
+            nextBtn.textContent = 'Go to Stats!';
+            buttonDiv.appendChild(nextBtn);
+            leftSide.appendChild(buttonDiv);
+        }
+
+
+    }
+}
+
+// Aux function, create the map with the player habilities
 function createLandsTable(characterID){
     var table = '<h5>Lands</h5>'+
             '<table class="table">'+
@@ -267,16 +332,99 @@ function createLandsTable(characterID){
     }
     table +=`</tbody>
     </table>`;
-    console.log(table);
     return table
 }
 
 
+// validate if isn´t a game started
 $(document.body).on('click', '#playBtn' ,function(e){
     var selected = $(e.currentTarget);
-    selected[0].disabled = true;
-    document.getElementById('characterPlaying').textContent = "Now playing: " + characters[selected.attr("character-btn")].name;
-    document.getElementById('characterCost').textContent = "total cost: 0.00";
-    document.getElementById(begin.join('-')).focus();
+    if(player){
+        swal({
+            title: 'A game is in progress',
+            text: "You want to stop this game and play with " + characters[selected.attr("character-btn")].name,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, go ahead'
+        }).then((result) => {
+            //player = undefined;
+            goalReached(false);
+            startGame(e);
+        })
+    }
+    else{
+        startGame(e);
+    }
+
 });
 
+// starts a new game, clean the vars and
+function startGame(e){
+    goal = false;
+    cleanMap();
+    var selected = $(e.currentTarget);
+    player = characters[selected.attr("character-btn")];
+    selected[0].disabled = true;
+    document.getElementById('characterPlaying').textContent = "Now playing: " + characters[selected.attr("character-btn")].name;
+    totalCost = 0;
+    setCost();
+    document.getElementById(begin.join('-')).focus();
+    srcImage = characters[selected.attr("character-btn")].src;
+    currentPos = begin;
+    setPlayer();
+    appendMove();
+}
+
+// aux function: set the total cost of all the movs in the screen
+function setCost(){
+    document.getElementById('characterCost').textContent = "Total cost: " + totalCost.toFixed(2);
+}
+
+// Clean the map before a new game starts
+function cleanMap(){
+    // clean text
+    begin = sessionStorage.getItem('begin');
+    begin = JSON.parse(begin);
+    currentPos = begin;
+    movs = [];
+    for(y=0; y<maze.length; y++){
+        for(x=0; x<maze[y].length; x++){
+            var pos = `${x.toString()}-${y.toString()}`;
+            var txtDiv = document.getElementById(pos+'txt');
+            txtDiv.textContent = "";
+            if(x==begin[0] && y==begin[1]){
+                txtDiv.textContent = "Inicio - ";
+            }
+            if(x==end[0] && y==end[1]){
+                txtDiv.textContent = "Final - ";
+            }
+        }
+    }
+    // clean image
+    try {
+        var imgDiv = document.getElementById("imagePlayer");
+        imgDiv.parentNode.removeChild(imgDiv);
+    }catch{}
+}
+
+
+$(document.body).on('click', '#nextBtn' ,function(e){
+    if(player){
+        swal({
+            title: 'A game is in progress',
+            text: "You want to stop this game and see the stats",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, go ahead'
+        }).then((result) => {
+            goalReached(false);
+        })
+    }
+
+    window.location.href = "/maze/stats";
+
+});

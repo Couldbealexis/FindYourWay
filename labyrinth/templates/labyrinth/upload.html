@@ -43,6 +43,7 @@
 {% block scripts %}
     <script src="{% static 'js/labyrinth/upload.js' %}"></script>
     <script type="text/javascript">
+        sessionStorage.clear();
         var one ;
         var err_flag = false;
         var jvars = document.getElementById('firstDiv').getAttribute('data-js-vars');

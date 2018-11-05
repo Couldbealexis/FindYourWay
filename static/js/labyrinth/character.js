@@ -105,7 +105,7 @@ function findLandById(search){
 
 
 $("#next").on("click", function(){
-    if(selectedCharacters.length > 1){
+    if(selectedCharacters.length > 0){
         let error = false;
         let beginLand = findLandById( maze[begin[1]][begin[0]] );
         // let endLand = findLandById( maze[end[1]][end[0]] );

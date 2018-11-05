@@ -80,9 +80,7 @@ $('#btnNext').click(function(){
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes, go ahead!'
         }).then(function(result) {
-          if (result) {
               incomplete = false;
-          }
         })
 
     }

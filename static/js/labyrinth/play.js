@@ -147,7 +147,37 @@ $(document).ready(function (){
     colorCell(begin[0], begin[1]);
     colorCell(end[0], end[1]);
 
+    // drawTree();
+
 });
+
+
+function drawTree(){
+
+    var RS = document.getElementById('leftSide');
+    var tree = document.createElement('div');
+    tree.setAttribute('id', 'container');
+    RS.appendChild(tree);
+
+
+    // s = new sigma({
+    //     graph: data,
+    //     container: 'container',
+    //     settings: {
+    //       defaultNodeColor: '#ec5148',
+    //       defaultEdgeColor: '#000'
+    //       }
+    //     });
+
+    sigma.parsers.json(data, {
+        container: 'container',
+        settings: {
+          defaultNodeColor: '#ec5148'
+        }
+      });
+
+    //    s.refresh();
+}
 
 
 // set the color to all the cell

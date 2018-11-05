@@ -90,6 +90,7 @@ $(document).ready(function (){
             attribColumn.value = x;
             attribLand.value = maze[y][x];
             cls.value = "cell";
+            let title = `Land ID: ${attribLand.value}, Land Name: ${findLandById(attribLand.value).name}`;
 
             // setting divs for text and image in every cell
             var txtDiv = document.createElement('div');
@@ -124,11 +125,14 @@ $(document).ready(function (){
                 tabIndex.value = 1;
                 // newMazeCell.style.backgroundColor = '#' + (land.color).toString();
                 newMazeCell.setAttributeNode(tabIndex);
+                title += ", Begin";
             }
             if(x==end[0] && y==end[1]){
                 txtDiv.textContent = "Final - ";
                 // newMazeCell.style.backgroundColor = '#' + (land.color).toString();
+                title += ", End";
             }
+            newMazeCell.setAttribute('title', title );
             rowDiv.appendChild(newMazeCell);
             newMazeCell.appendChild(txtDiv);
             newMazeCell.appendChild(imageDiv);
@@ -146,39 +150,33 @@ $(document).ready(function (){
 
     colorCell(begin[0], begin[1]);
     colorCell(end[0], end[1]);
+    setTooltip(begin[0], begin[1]);
+    setTooltip(end[0], end[1]);
 
     // drawTree();
 
 });
 
-
+// Drawing the tree in the screen
 function drawTree(){
 
-    var RS = document.getElementById('leftSide');
-    var tree = document.createElement('div');
-    tree.setAttribute('id', 'container');
-    RS.appendChild(tree);
-
-
-    // s = new sigma({
-    //     graph: data,
-    //     container: 'container',
-    //     settings: {
-    //       defaultNodeColor: '#ec5148',
-    //       defaultEdgeColor: '#000'
-    //       }
-    //     });
-
-    sigma.parsers.json(data, {
+    s = new sigma({
+        graph: data,
         container: 'container',
         settings: {
-          defaultNodeColor: '#ec5148'
+          defaultNodeColor: '#ec5148',
+          defaultEdgeColor: '#000'
         }
-      });
+    });
 
-    //    s.refresh();
+    s.refresh();
 }
 
+// Set the tooltip to a cell
+function setTooltip(x, y){
+    let idx = '#'+x.toString() + '-' + y.toString();
+    $(idx).tooltip();
+}
 
 // set the color to all the cell
 function colorCell(x,y){
@@ -227,12 +225,15 @@ function move(side){
     let onePos = parseInt(currentPos[1].toString());
     nextPos.push(zeroPos);
     nextPos.push(onePos);
+    parentNode = [];
+    parentNode.push(zeroPos);
+    parentNode.push(onePos);
+
     if(side=='39')
     {//si la tecla presionada es derecha
         if(currentPos[0] + 1 < maze["0"].length){
             nextPos[0] = nextPos[0] + 1;
             validPos = true;
-
         }
     }
 
@@ -286,17 +287,121 @@ function move(side){
 
 // an array with all the movs is created
 function appendMove() {
-    var mov = {};
+    let mov = {};
     mov.x = currentPos[0];
     mov.y = currentPos[1];
+    let leaf = {};
+    leaf.root = currentPos;
+    leaf.childs = [];
+
+    // let existingLeaf = false;
+    // if(visited.length > 0){
+    //     for(let i =0; i<visited.length; i++){
+    //         if (leaf.root[0] == visited[i].root[0] && leaf.root[1] == visited[i].root[0]){
+    //             existingLeaf = true;
+    //         }
+    //     }
+    // }
+    //
+    // // if parent is root
+    // if(tree.root[0] == parentNode[0] && tree.root[1] == parentNode[1]){
+    //     for(let i =0; i<visited.length; i++) {
+    //         if (leaf.root[0] == visited[i].root[0] && leaf.root[1] == visited[i].root[1]) {
+    //             existingLeaf = true;
+    //         } else {
+    //             tree.childs.push(leaf);
+    //         }
+    //     }
+    //
+    // }
+    //
+    // if(!existingLeaf) {
+    //     if(tree.childs.length > 0){
+    //         for(let i=0; i<tree.childs.length; i++){
+    //             treeSearch(tree.childs[i], leaf);
+    //         }
+    //     }
+    //     visited.push(leaf);
+    // }
+
+
+    // let px = currentPos[0];
+    // let py = currentPos[1];
+    // let cellsToExpand = [];
+    //
+    //
+    // // left right
+    // if(parseInt(px) + 1 < maze["0"].length){
+    //     let rightCell = document.getElementById((parseInt(px) + 1).toString() + '-' + py.toString());
+    //     console.log(rightCell);
+    //     let land = findLandById(rightCell.getAttribute('data-land'));
+    //     if(player[land.id] >= 0){
+    //         let cell = {};
+    //         cell.root = [(parseInt(px) + 1), py];
+    //         cell.childs = [];
+    //         cellsToExpand.push(cell);
+    //     }
+    // }
+    // // left cell
+    // if(px > 0){
+    //     let leftCell = document.getElementById((parseInt(px) - 1).toString() + '-' + py.toString());
+    //     let land = findLandById(leftCell.getAttribute('data-land'));
+    //     if(player[land.id] >= 0){
+    //         let cell = {};
+    //         cell.root = [(parseInt(px) - 1), py];
+    //         cell.childs = [];
+    //         cellsToExpand.push(cell);
+    //     }
+    // }
+    // // up cell
+    // if(y > 0){
+    //     let upCell = document.getElementById(px.toString() + '-' + (parseInt(py) -1).toString());
+    //     let land = findLandById(upCell.getAttribute('data-land')).color;
+    //     if(player[land.id] >= 0){
+    //         let cell = {};
+    //         cell.root = [(px), (parseInt(py) -1)];
+    //         cell.childs = [];
+    //         cellsToExpand.push(cell);
+    //     }
+    // }
+    // // down cell
+    // if(parseInt(y) + 1 < maze.length){
+    //     let downCell = document.getElementById(px.toString() + '-' + (parseInt(py) +1).toString());
+    //     let land = findLandById(downCell.getAttribute('data-land'));
+    //     if(player[land.id] >= 0){
+    //         let cell = {};
+    //         cell.root = [px, (parseInt(py) +1)];
+    //         cell.childs = [];
+    //         cellsToExpand.push(cell);
+    //     }
+    // }
+    //
+    // tree.push(cellsToExpand);
+
+
+
     movs.push(mov);
-    var target = document.getElementById(currentPos.join('-') + 'txt');
+    let target = document.getElementById(currentPos.join('-') + 'txt');
     if (target.textContent.length > 0) {
         target.textContent = target.textContent + ' ' + movs.length
     }
     else{
         target.textContent = target.textContent + movs.length
     }
+}
+
+
+function treeSearch(leaf, posSearched){
+    if(leaf.root[0] == parentNode[0] && leaf.root[1] == parentNode[1] ){
+        leaf.childs.push(posSearched);
+        return;
+    }
+    if(leaf.childs.length > 0){
+        for(let i=0; i<leaf.childs.length; i++){
+            treeSearch(leaf.childs[i], posSearched);
+        }
+    }
+
 }
 
 
@@ -329,16 +434,17 @@ $(document.body).on('click', '#infoBtn' ,function(e){
 // The goal is reached and the player is appended to the session storage
 function goalReached(reached) {
     goal = true;
-    var playedCharacters = sessionStorage.getItem('playedCharacters');
+    let playedCharacters = sessionStorage.getItem('playedCharacters');
     playedCharacters = JSON.parse(playedCharacters);
     player.totalCost = totalCost;
     player.reachGoal = reached;
     player.movs = movs;
+    player.tree = tree;
     if(!playedCharacters){
         playedCharacters = [];
     }
     playedCharacters.push(player);
-    var playedCharactersString = JSON.stringify(playedCharacters);
+    let playedCharactersString = JSON.stringify(playedCharacters);
     sessionStorage.removeItem('playedCharacters');
     sessionStorage.setItem('playedCharacters', playedCharactersString);
     if(reached){
@@ -424,7 +530,7 @@ $(document.body).on('click', '#playBtn' ,function(e){
 function startGame(e){
     goal = false;
     cleanMap();
-    var selected = $(e.currentTarget);
+    let selected = $(e.currentTarget);
     player = characters[selected.attr("character-btn")];
     selected[0].disabled = true;
     document.getElementById('characterPlaying').textContent = "Now playing: " + characters[selected.attr("character-btn")].name;
@@ -433,8 +539,16 @@ function startGame(e){
     document.getElementById(begin.join('-')).focus();
     srcImage = characters[selected.attr("character-btn")].src;
     currentPos = begin;
+    tree.root = begin;
+    tree.childs = [];
+    visited.push(tree);
+    let parentx = begin[0];
+    let parenty = begin[1];
+    parentNode.push(parentx);
+    parentNode.push(parenty);
     setPlayer();
     appendMove();
+
 }
 
 // aux function: set the total cost of all the movs in the screen
@@ -491,3 +605,6 @@ $(document.body).on('click', '#nextBtn' ,function(e){
     window.location.href = "/maze/stats";
 
 });
+
+
+

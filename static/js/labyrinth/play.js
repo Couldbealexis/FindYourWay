@@ -167,7 +167,11 @@ function findLandById(search){
 // move the player
 function move(side){
     var validPos = false;
-    var nextPos = currentPos;
+    var nextPos = [];
+    let zeroPos = parseInt(currentPos[0].toString());
+    let onePos = parseInt(currentPos[1].toString());
+    nextPos.push(zeroPos);
+    nextPos.push(onePos);
     if(side=='39')
     {//si la tecla presionada es derecha
         if(currentPos[0] + 1 < maze["0"].length){

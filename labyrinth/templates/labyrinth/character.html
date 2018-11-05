@@ -85,6 +85,9 @@
         var one ;
         var err_flag = false;
         var currentChar;
+        var maze;
+        var begin = [];
+        var end = [];
         var jvars = document.getElementById('firstDiv').getAttribute('data-js-vars');
         jvars = jvars.replace(/'/g, '"');
         jvars = JSON.parse(jvars || '{}');

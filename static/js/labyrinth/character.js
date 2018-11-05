@@ -1,7 +1,12 @@
 
 $(document).ready(function () {
     setTableHeaders();
-
+    maze = sessionStorage.getItem('maze');
+    maze = JSON.parse(maze);
+    begin = sessionStorage.getItem('begin');
+    begin = JSON.parse(begin);
+    end = sessionStorage.getItem('end');
+    end = JSON.parse(end);
 });
 
 
@@ -88,11 +93,47 @@ $("#characters-table").on("input", ".cost-input", function(costInput){
 });
 
 
-$("#next").on("click", function(){
+// given an id returns the id with that id
+function findLandById(search){
+    for(var i = 0; i<lands.length; i++){
+        if(lands[i].id == search ){
+            var land = lands[i]
+        }
+    }
+    return land
+}
 
+
+$("#next").on("click", function(){
     if(selectedCharacters.length > 1){
-        sessionStorage.setItem('characters', JSON.stringify(selectedCharacters));
-        window.location.href = "/maze/play";
+        let error = false;
+        let beginLand = findLandById( maze[begin[1]][begin[0]] );
+        // let endLand = findLandById( maze[end[1]][end[0]] );
+        for(let i= 0; i<selectedCharacters.length; i++){
+            for(let l=0; l<lands.length; l++){
+                if(selectedCharacters[i][lands[l].id] < 0){
+                    if(lands[l].id == beginLand.id){
+                        error = true;
+                    }
+                    // if(lands[l].id == endLand.id){
+                    //     error = true;
+                    // }
+                }
+            }
+        }
+        if(error){
+            swal({
+                title: "Oh no! :(",
+                text: "One of the characters can't start in the land " + beginLand.name,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            });
+        }else{
+            sessionStorage.setItem('characters', JSON.stringify(selectedCharacters));
+            window.location.href = "/maze/play";
+        }
     }
     else {
         swal({

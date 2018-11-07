@@ -1,6 +1,5 @@
 
 $(document).ready(function (){
-    var alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
     maze = sessionStorage.getItem('maze');
     maze = JSON.parse(maze);
     lands = sessionStorage.getItem('lands');
@@ -14,29 +13,29 @@ $(document).ready(function (){
     sessionStorage.removeItem('playedCharacters');
 
     // get all the characters and draw them
-    var characters_row = document.getElementById('characters-row');
-    for (var i=0; i<characters.length; i++){
+    let characters_row = document.getElementById('characters-row');
+    for (let i=0; i<characters.length; i++){
         // Parent Div
-        var characterDiv = document.createElement('div');
+        let characterDiv = document.createElement('div');
         characterDiv.setAttribute('characterDiv-id', i);
         characterDiv.setAttribute("style", "margin-right: 20px");
         // Image
-        var characterImage = document.createElement('img');
+        let characterImage = document.createElement('img');
         characterImage.setAttribute("src", characters[i].src);
         characterImage.setAttribute("character-id", i);
         characterImage.setAttribute("height", "100px");
         characterImage.setAttribute("width", "100px");
         characterImage.setAttribute("alt", characters[i].name);
         // Buttons
-        var buttonsDiv = document.createElement('div');
+        let buttonsDiv = document.createElement('div');
         buttonsDiv.setAttribute('id', 'buttons-row');
         buttonsDiv.setAttribute('class', 'row');
-        var infoBtn = document.createElement('button');
+        let infoBtn = document.createElement('button');
         infoBtn.setAttribute('id', 'infoBtn');
         infoBtn.setAttribute('character-btn', i);
         infoBtn.setAttribute('class', 'btn btn-info btn-md');
         infoBtn.textContent = 'Info';
-        var playBtn = document.createElement('button');
+        let playBtn = document.createElement('button');
         playBtn.setAttribute('id', 'playBtn');
         playBtn.setAttribute('character-btn', i);
         playBtn.setAttribute('class', 'btn btn-success btn-md');
@@ -49,11 +48,11 @@ $(document).ready(function (){
     }
 
     // Get the Header columns [A|B|C|...]
-    var mazeHeader = document.getElementById('mazeHeader');
-    for(var i = 0; i < maze[1].length; i++){
-        var newDiv = document.createElement('div');
-        var att = document.createAttribute('data-letter');
-        var cls = document.createAttribute('class');
+    let mazeHeader = document.getElementById('mazeHeader');
+    for(let i = 0; i < maze[1].length; i++){
+        let newDiv = document.createElement('div');
+        let att = document.createAttribute('data-letter');
+        let cls = document.createAttribute('class');
         att.value = i;
         cls.value = "Hcell";
         newDiv.setAttributeNode(att);
@@ -62,35 +61,35 @@ $(document).ready(function (){
     }
 
     // Get the left side rows [1|2|3|...]
-    var leftSide = document.getElementById('leftSide');
-    for(var y=0; y<maze.length; y++){
-        var rowDiv = document.createElement('div');
-        var cls = document.createAttribute('class');
+    let leftSide = document.getElementById('leftSide');
+    for(let y=0; y<maze.length; y++){
+        let rowDiv = document.createElement('div');
+        let cls = document.createAttribute('class');
         cls.value = "row";
         rowDiv.setAttributeNode(cls);
         rowDiv.setAttribute('id', `row${y}`);
         leftSide.appendChild(rowDiv);
-        var rowNumber = document.createElement('div');
-        var rowNumberCls = document.createAttribute('class');
+        let rowNumber = document.createElement('div');
+        let rowNumberCls = document.createAttribute('class');
         rowNumberCls.value = "Hcell";
         rowNumber.textContent = (y+1).toString();
         rowNumber.setAttributeNode(rowNumberCls);
         rowDiv.appendChild(rowNumber);
 
         // Get the lands for every row
-        for(var x=0; x<maze[y].length; x++){
-            var newMazeCell = document.createElement('div');
-            var attribRow = document.createAttribute('data-row');
-            var attribColumn = document.createAttribute('data-column');
-            var attribLand = document.createAttribute('data-land');
-            var cls = document.createAttribute('class');
+        for(let x=0; x<maze[y].length; x++){
+            let newMazeCell = document.createElement('div');
+            let attribRow = document.createAttribute('data-row');
+            let attribColumn = document.createAttribute('data-column');
+            let attribLand = document.createAttribute('data-land');
+            let cls = document.createAttribute('class');
             var idx = document.createAttribute('id');
             idx.value = x.toString() + '-' + y.toString();
             attribRow.value = y;
             attribColumn.value = x;
             attribLand.value = maze[y][x];
             cls.value = "cell";
-            let title = `Land ID: ${attribLand.value}, Land Name: ${findLandById(attribLand.value).name}`;
+            //let title = `Land ID: ${attribLand.value}, Land Name: ${findLandById(attribLand.value).name}, Coords: (${alphabet[x]}${y+1})`;
 
             // setting divs for text and image in every cell
             var txtDiv = document.createElement('div');
@@ -118,21 +117,9 @@ $(document).ready(function (){
 
             land = findLandById(maze[y][x]);
             newMazeCell.style.backgroundColor = '#808080';
-            if(x==begin[0] && y==begin[1]){
-                txtDiv.textContent = "Inicio - ";
-                // newMazeCell.focus();
-                var tabIndex = document.createAttribute('tabIndex');
-                tabIndex.value = 1;
-                // newMazeCell.style.backgroundColor = '#' + (land.color).toString();
-                newMazeCell.setAttributeNode(tabIndex);
-                title += ", Begin";
-            }
-            if(x==end[0] && y==end[1]){
-                txtDiv.textContent = "Final - ";
-                // newMazeCell.style.backgroundColor = '#' + (land.color).toString();
-                title += ", End";
-            }
-            newMazeCell.setAttribute('title', title );
+            if(isBegin(x,y))
+                newMazeCell.setAttribute('tabIndex', "1");
+
             rowDiv.appendChild(newMazeCell);
             newMazeCell.appendChild(txtDiv);
             newMazeCell.appendChild(imageDiv);
@@ -148,63 +135,67 @@ $(document).ready(function (){
         )
     });
 
-    colorCell(begin[0], begin[1]);
-    colorCell(end[0], end[1]);
-    setTooltip(begin[0], begin[1]);
-    setTooltip(end[0], end[1]);
-
     // drawTree();
 
 });
 
-// Drawing the tree in the screen
-function drawTree(){
+// #Section Aux functions
+function isBegin(x,y) {
+    return x==begin[0] && y==begin[1]
+}
 
-    s = new sigma({
-        graph: data,
-        container: 'container',
-        settings: {
-          defaultNodeColor: '#ec5148',
-          defaultEdgeColor: '#000'
-        }
-    });
+function isEnd(x,y) {
+    return x==end[0] && y==end[1]
+}
 
-    s.refresh();
+// Disable tootip on focus
+$(document).on('focus', 'div', function () { $(this).tooltip('hide'); });
+
+// Expand cell and his neighbours
+function unmaskCell(x,y){
+    colorCell(x,y);
+    setTooltip(begin[0], begin[1]);
+    // right cell
+    if(parseInt(x) + 1 < maze["0"].length){
+        colorCell((parseInt(x) + 1), y);
+        setTooltip((parseInt(x) + 1), y);
+    }
+    // left cell
+    if(x > 0){
+        colorCell((parseInt(x) - 1), y);
+        setTooltip((parseInt(x) - 1), y);
+    }
+    // up cell
+    if(y > 0){
+        colorCell(x, (parseInt(y) - 1));
+        setTooltip(x, (parseInt(y) - 1));
+    }
+    // down cell
+    if(parseInt(y) + 1 < maze.length){
+        colorCell(x, (parseInt(y) + 1));
+        setTooltip(x, (parseInt(y) + 1));
+    }
+
 }
 
 // Set the tooltip to a cell
 function setTooltip(x, y){
     let idx = '#'+x.toString() + '-' + y.toString();
+    let cell = document.getElementById(x.toString() + '-' + y.toString());
+    let title = `Land ID: ${cell.getAttribute('data-land')}, Land Name: ${findLandById(cell.getAttribute('data-land')).name}, Coords: (${alphabet[x]}${y+1})`;
+    if(isBegin(x,y))
+        title += `, Begin`;
+    if(isEnd(x,y))
+        title += `, End`;
+    cell.setAttribute('title', title);
     $(idx).tooltip();
 }
 
-// set the color to all the cell
+// set the color to the cell
 function colorCell(x,y){
     let cell = document.getElementById(x.toString() + '-' + y.toString());
     cell.style.backgroundColor = '#' + findLandById(cell.getAttribute('data-land')).color;
-    // right cell
-    if(parseInt(x) + 1 < maze["0"].length){
-        let rigthCell = document.getElementById((parseInt(x) + 1).toString() + '-' + y.toString());
-        rigthCell.style.backgroundColor = '#' + findLandById(rigthCell.getAttribute('data-land')).color;
-    }
-    // left cell
-    if(x > 0){
-        let leftCell = document.getElementById((parseInt(x) - 1).toString() + '-' + y.toString());
-        leftCell.style.backgroundColor = '#' + findLandById(leftCell.getAttribute('data-land')).color;
-    }
-    // up cell
-    if(y > 0){
-        let upCell = document.getElementById(x.toString() + '-' + (parseInt(y) -1).toString());
-        upCell.style.backgroundColor = '#' + findLandById(upCell.getAttribute('data-land')).color;
-    }
-    // down cell
-    if(parseInt(y) + 1 < maze.length){
-        let upCell = document.getElementById(x.toString() + '-' + (parseInt(y) +1).toString());
-        upCell.style.backgroundColor = '#' + findLandById(upCell.getAttribute('data-land')).color;
-    }
-
 }
-
 
 // given an id returns the id with that id
 function findLandById(search){
@@ -215,14 +206,15 @@ function findLandById(search){
     }
     return land
 }
+// #Section Aux functions
 
 
 // move the player
 function move(side){
-    var validPos = false;
+    let validPos = false;
     let nextPos = [];
-    let zeroPos = parseInt(currentPos[0].toString());
-    let onePos = parseInt(currentPos[1].toString());
+    let zeroPos = parseInt(currentPos[0]);
+    let onePos = parseInt(currentPos[1]);
     nextPos.push(zeroPos);
     nextPos.push(onePos);
     parentNode = [];
@@ -282,6 +274,22 @@ function move(side){
         }
 
     }
+}
+
+
+// Drawing the tree in the screen
+function drawTree(){
+
+    s = new sigma({
+        graph: data,
+        container: 'container',
+        settings: {
+          defaultNodeColor: '#ec5148',
+          defaultEdgeColor: '#000'
+        }
+    });
+
+    s.refresh();
 }
 
 
@@ -378,8 +386,6 @@ function appendMove() {
     //
     // tree.push(cellsToExpand);
 
-
-
     movs.push(mov);
     let target = document.getElementById(currentPos.join('-') + 'txt');
     if (target.textContent.length > 0) {
@@ -407,7 +413,7 @@ function treeSearch(leaf, posSearched){
 
 // Once the player movs, set the image in the map
 function setPlayer(){
-    var playerPos = currentPos.join('-') + 'image';
+    let playerPos = currentPos.join('-') + 'image';
     playerImage = document.createElement('img');
     playerImage.setAttribute("src", srcImage);
     playerImage.setAttribute("id", "imagePlayer");
@@ -563,22 +569,23 @@ function cleanMap(){
     begin = JSON.parse(begin);
     currentPos = begin;
     movs = [];
-    for(y=0; y<maze.length; y++){
-        for(x=0; x<maze[y].length; x++){
-            var pos = `${x.toString()}-${y.toString()}`;
+    for(let y=0; y<maze.length; y++){
+        for(let x=0; x<maze[y].length; x++){
+            let pos = `${x.toString()}-${y.toString()}`;
             document.getElementById(pos).style.backgroundColor = '#808080';
-            var txtDiv = document.getElementById(pos+'txt');
+            let txtDiv = document.getElementById(pos+'txt');
             txtDiv.textContent = "";
-            if(x==begin[0] && y==begin[1]){
+            if(isBegin(x, y)){
                 txtDiv.textContent = "Inicio - ";
             }
-            if(x==end[0] && y==end[1]){
+            if(isEnd(x, y)){
                 txtDiv.textContent = "Final - ";
             }
         }
     }
-    colorCell(begin[0], begin[1]);
+    unmaskCell(begin[0], begin[1]);
     colorCell(end[0], end[1]);
+    setTooltip(end[0], end[1]);
     // clean image
     try {
         var imgDiv = document.getElementById("imagePlayer");

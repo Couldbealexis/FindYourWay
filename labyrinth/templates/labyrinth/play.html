@@ -3,7 +3,7 @@
 
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'css/labyrinth/preview.css' %}">
+    <link rel="stylesheet" href="{% static 'css/labyrinth/play.css' %}">
 {% endblock %}
 
 
@@ -50,27 +50,28 @@
     <script src="{% static 'js/labyrinth/play.js' %}"></script>
 
     <script>
+        let alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
         //Session storage vars
-        var maze = [];
-        var lands = [];
-        var begin = [];
-        var end = [];
-        var characters = [];
+        let maze = [];
+        let lands = [];
+        let begin = [];
+        let end = [];
+        let characters = [];
 
-        var land;
+        let land;
 
         // movs-in-the-game vars
-        var currentPos = [];
-        var player;
-        var playerImage;
-        var srcImage;
-        var goal;
-        var movs = [];
-        var totalCost = 0;
+        let currentPos = [];
+        let player;
+        let playerImage;
+        let srcImage;
+        let goal;
+        let movs = [];
+        let totalCost = 0;
 
         // Tree
-        var tree = [];
-        var visited = [];
+        let tree = [];
+        let visited = [];
         let parentNode = [];
 
         // Detect key pressed

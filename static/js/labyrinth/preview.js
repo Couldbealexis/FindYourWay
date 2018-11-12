@@ -81,20 +81,23 @@ $('#btnNext').click(function(){
           confirmButtonText: 'Yes, go ahead!'
         }).then(function(result) {
               incomplete = false;
+              nextPage();
         })
 
-    }
-
-    if(!incomplete){
-        sessionStorage.clear();
-        sessionStorage.setItem('maze', JSON.stringify(maze));
-        sessionStorage.setItem('lands', JSON.stringify(lands));
-        sessionStorage.setItem('begin', JSON.stringify(coordBegin));
-        sessionStorage.setItem('end', JSON.stringify(coordEnd));
-        window.location.href = "/maze/character";
+    }else{
+        nextPage();
     }
 });
 
+
+function nextPage(){
+    sessionStorage.clear();
+    sessionStorage.setItem('maze', JSON.stringify(maze));
+    sessionStorage.setItem('lands', JSON.stringify(lands));
+    sessionStorage.setItem('begin', JSON.stringify(coordBegin));
+    sessionStorage.setItem('end', JSON.stringify(coordEnd));
+    window.location.href = "/maze/character";
+}
 
 function selectBegin() {
     begin = true;

@@ -126,6 +126,10 @@ $(document).ready(function (){
         }
     }
 
+    if(characters.length == 1){
+        createNxtBtn();
+    }
+
     // Set color to the labirynth
     $(".Hcell").css("background-color", "grey");
     var arr = $.find("div[data-letter]");
@@ -135,9 +139,46 @@ $(document).ready(function (){
         )
     });
 
-    // drawTree();
-
 });
+
+
+// create a new Node to the tree
+function Node(data, parent) {
+    let node = {};
+    node.data = data;
+    // data = {
+    //     coords,
+    //     HN,
+    //     GN,
+    //     visit
+    //}
+    node.parent = parent;
+    node.children = [];
+    return node;
+}
+
+
+// Create a tree
+function Tree(data){
+    tree = new Node(data, null);
+}
+
+
+// Drawing the tree in the screen
+function drawTree(){
+
+    s = new sigma({
+        graph: data,
+        container: 'network-graph',
+        settings: {
+          defaultNodeColor: '#ec5148',
+          defaultEdgeColor: '#000'
+        }
+    });
+
+    s.refresh();
+}
+
 
 // #Section Aux functions
 function isBegin(x,y) {
@@ -150,33 +191,6 @@ function isEnd(x,y) {
 
 // Disable tootip on focus
 $(document).on('focus', 'div', function () { $(this).tooltip('hide'); });
-
-// Expand cell and his neighbours
-function unmaskCell(x,y){
-    colorCell(x,y);
-    setTooltip(begin[0], begin[1]);
-    // right cell
-    if(parseInt(x) + 1 < maze["0"].length){
-        colorCell((parseInt(x) + 1), y);
-        setTooltip((parseInt(x) + 1), y);
-    }
-    // left cell
-    if(x > 0){
-        colorCell((parseInt(x) - 1), y);
-        setTooltip((parseInt(x) - 1), y);
-    }
-    // up cell
-    if(y > 0){
-        colorCell(x, (parseInt(y) - 1));
-        setTooltip(x, (parseInt(y) - 1));
-    }
-    // down cell
-    if(parseInt(y) + 1 < maze.length){
-        colorCell(x, (parseInt(y) + 1));
-        setTooltip(x, (parseInt(y) + 1));
-    }
-
-}
 
 // Set the tooltip to a cell
 function setTooltip(x, y){
@@ -206,7 +220,170 @@ function findLandById(search){
     }
     return land
 }
-// #Section Aux functions
+
+// aux function: set the total cost of all the movs in the screen
+function setCost(){
+    document.getElementById('characterCost').textContent = "Total cost: " + totalCost.toFixed(2);
+}
+
+// Create next btn
+function createNxtBtn(){
+    let leftSide = document.getElementById('leftSide');
+    let buttonDiv = document.getElementById('nextBtnDiv');
+    if(!buttonDiv){
+        buttonDiv = document.createElement('div');
+        buttonDiv.setAttribute('id', 'nextBtnDiv');
+        buttonDiv.setAttribute('class', 'row');
+        buttonDiv.setAttribute('style', 'margin-top:20px');
+        let nextBtn = document.createElement('button');
+        nextBtn.setAttribute('id', 'nextBtn');
+        nextBtn.setAttribute('class', 'btn btn-primary btn-md');
+        nextBtn.textContent = 'Go to Stats!';
+        buttonDiv.appendChild(nextBtn);
+        leftSide.appendChild(buttonDiv);
+    }
+}
+
+// Aux function, create the map with the player habilities
+function createLandsTable(characterID){
+    var table = '<h5>Lands</h5>'+
+            '<table class="table">'+
+            '<thead class="thead-dark">'+
+                '<tr>'+
+                  '<th scope="col">ID</th>'+
+                  '<th scope="col">Name</th>'+
+                  '<th scope="col">Cost</th>'+
+                '</tr>'+
+            '</thead>'+
+            '<tbody>';
+
+    for (var i=0; i<lands.length; i++){
+        table += `<tr>
+            <td> ${lands[i].id} </td>
+            <td><span style='color: #${lands[i].color}'> ${lands[i].name} </span></td>
+            <td> ${characters[characterID][lands[i].id]} </td>
+            </tr>`
+    }
+    table +=`</tbody>
+    </table>`;
+    return table
+}
+
+// Once the player movs, set the image in the map
+function setPlayer(){
+    let playerPos = currentPos.join('-') + 'image';
+    playerImage = document.createElement('img');
+    playerImage.setAttribute("src", srcImage);
+    playerImage.setAttribute("id", "imagePlayer");
+    playerImage.setAttribute("height", "100%");
+    playerImage.setAttribute("width", "100%");
+    playerImage.setAttribute("alt", "player");
+    document.getElementById(playerPos).appendChild(playerImage);
+}
+
+$(document.body).on('click', '#playBtn' ,function(e){
+    var selected = $(e.currentTarget);
+    if(player){
+        swal({
+            title: 'A game is in progress',
+            text: "You want to stop this game and play with " + characters[selected.attr("character-btn")].name,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, go ahead'
+        }).then((result) => {
+            //player = undefined;
+            goalReached(false);
+            startGame(e);
+        })
+    }
+    else{
+        startGame(e);
+    }
+
+});
+
+$(document.body).on('click', '#infoBtn' ,function(e){
+    let selected = $(e.currentTarget);
+    swal({
+          title: characters[selected.attr("character-btn")].name,
+          html: createLandsTable(selected.attr("character-btn")),
+          imageUrl: characters[selected.attr("character-btn")].src,
+          imageWidth: 100,
+          imageHeight: 100,
+          animation: false
+        })
+});
+
+$(document.body).on('click', '#nextBtn' ,function(e){
+    if(player){
+        swal({
+            title: 'A game is in progress',
+            text: "You want to stop this game and see the stats",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, go ahead'
+        }).then((result) => {
+            goalReached(false);
+        })
+    }
+
+    window.location.href = "/maze/stats";
+
+});
+// #End section Aux functions
+
+
+// Expand cell and his neighbours
+function unmaskCell(x,y){
+    colorCell(x,y);
+    setTooltip(begin[0], begin[1]);
+    let data = {};
+    // data = {
+    //     coords,
+    //     HN,
+    //     GN,
+    //     visit
+    //}
+    data.coords = currentPos;
+    data.HN = 0;
+    data.GN = 0;
+    let leaf = new Node(data, parentNode);
+    if(movs.length == 0){
+        data.visit = 1;
+        Tree(data);
+    }else if (movs.length == 1){
+        tree.children.push(leaf);
+    }else{
+        data.visit = movs.length;
+        treeSearch(tree, leaf)
+    }
+    visited.push(data);
+    // right cell
+    if(parseInt(x) + 1 < maze["0"].length){
+        colorCell((parseInt(x) + 1), y);
+        setTooltip((parseInt(x) + 1), y);
+    }
+    // left cell
+    if(x > 0){
+        colorCell((parseInt(x) - 1), y);
+        setTooltip((parseInt(x) - 1), y);
+    }
+    // up cell
+    if(y > 0){
+        colorCell(x, (parseInt(y) - 1));
+        setTooltip(x, (parseInt(y) - 1));
+    }
+    // down cell
+    if(parseInt(y) + 1 < maze.length){
+        colorCell(x, (parseInt(y) + 1));
+        setTooltip(x, (parseInt(y) + 1));
+    }
+
+}
 
 
 // move the player
@@ -255,16 +432,14 @@ function move(side){
 
     // if the next pos is valid, go
     if(validPos){
-        var nextCell = document.getElementById(nextPos.join('-'));
+        let nextCell = document.getElementById(nextPos.join('-'));
         land = findLandById(nextCell.getAttribute('data-land'));
         if(player[land.id] >= 0){
-            //console.log(totalCost);
             totalCost = parseFloat(totalCost) + parseFloat(player[land.id]);
-            //console.log(totalCost);
             currentPos = nextPos;
-            colorCell(currentPos[0], currentPos[1]);
             appendMove();
-            var element = document.getElementById("imagePlayer");
+            unmaskCell(currentPos[0], currentPos[1]);
+            let element = document.getElementById("imagePlayer");
             element.parentNode.removeChild(element);
             setPlayer();
             setCost(totalCost);
@@ -277,115 +452,11 @@ function move(side){
 }
 
 
-// Drawing the tree in the screen
-function drawTree(){
-
-    s = new sigma({
-        graph: data,
-        container: 'container',
-        settings: {
-          defaultNodeColor: '#ec5148',
-          defaultEdgeColor: '#000'
-        }
-    });
-
-    s.refresh();
-}
-
-
-// an array with all the movs is created
+// track all the movs
 function appendMove() {
     let mov = {};
     mov.x = currentPos[0];
     mov.y = currentPos[1];
-    let leaf = {};
-    leaf.root = currentPos;
-    leaf.childs = [];
-
-    // let existingLeaf = false;
-    // if(visited.length > 0){
-    //     for(let i =0; i<visited.length; i++){
-    //         if (leaf.root[0] == visited[i].root[0] && leaf.root[1] == visited[i].root[0]){
-    //             existingLeaf = true;
-    //         }
-    //     }
-    // }
-    //
-    // // if parent is root
-    // if(tree.root[0] == parentNode[0] && tree.root[1] == parentNode[1]){
-    //     for(let i =0; i<visited.length; i++) {
-    //         if (leaf.root[0] == visited[i].root[0] && leaf.root[1] == visited[i].root[1]) {
-    //             existingLeaf = true;
-    //         } else {
-    //             tree.childs.push(leaf);
-    //         }
-    //     }
-    //
-    // }
-    //
-    // if(!existingLeaf) {
-    //     if(tree.childs.length > 0){
-    //         for(let i=0; i<tree.childs.length; i++){
-    //             treeSearch(tree.childs[i], leaf);
-    //         }
-    //     }
-    //     visited.push(leaf);
-    // }
-
-
-    // let px = currentPos[0];
-    // let py = currentPos[1];
-    // let cellsToExpand = [];
-    //
-    //
-    // // left right
-    // if(parseInt(px) + 1 < maze["0"].length){
-    //     let rightCell = document.getElementById((parseInt(px) + 1).toString() + '-' + py.toString());
-    //     console.log(rightCell);
-    //     let land = findLandById(rightCell.getAttribute('data-land'));
-    //     if(player[land.id] >= 0){
-    //         let cell = {};
-    //         cell.root = [(parseInt(px) + 1), py];
-    //         cell.childs = [];
-    //         cellsToExpand.push(cell);
-    //     }
-    // }
-    // // left cell
-    // if(px > 0){
-    //     let leftCell = document.getElementById((parseInt(px) - 1).toString() + '-' + py.toString());
-    //     let land = findLandById(leftCell.getAttribute('data-land'));
-    //     if(player[land.id] >= 0){
-    //         let cell = {};
-    //         cell.root = [(parseInt(px) - 1), py];
-    //         cell.childs = [];
-    //         cellsToExpand.push(cell);
-    //     }
-    // }
-    // // up cell
-    // if(y > 0){
-    //     let upCell = document.getElementById(px.toString() + '-' + (parseInt(py) -1).toString());
-    //     let land = findLandById(upCell.getAttribute('data-land')).color;
-    //     if(player[land.id] >= 0){
-    //         let cell = {};
-    //         cell.root = [(px), (parseInt(py) -1)];
-    //         cell.childs = [];
-    //         cellsToExpand.push(cell);
-    //     }
-    // }
-    // // down cell
-    // if(parseInt(y) + 1 < maze.length){
-    //     let downCell = document.getElementById(px.toString() + '-' + (parseInt(py) +1).toString());
-    //     let land = findLandById(downCell.getAttribute('data-land'));
-    //     if(player[land.id] >= 0){
-    //         let cell = {};
-    //         cell.root = [px, (parseInt(py) +1)];
-    //         cell.childs = [];
-    //         cellsToExpand.push(cell);
-    //     }
-    // }
-    //
-    // tree.push(cellsToExpand);
-
     movs.push(mov);
     let target = document.getElementById(currentPos.join('-') + 'txt');
     if (target.textContent.length > 0) {
@@ -397,44 +468,20 @@ function appendMove() {
 }
 
 
-function treeSearch(leaf, posSearched){
-    if(leaf.root[0] == parentNode[0] && leaf.root[1] == parentNode[1] ){
-        leaf.childs.push(posSearched);
+// currentNode is the node that is compared with the newNode.
+// If the compare is true, append, else, keep searching
+function treeSearch(currentNode, newNode){
+    if(currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1] ){
+        currentNode.children.push(newNode);
         return;
     }
-    if(leaf.childs.length > 0){
-        for(let i=0; i<leaf.childs.length; i++){
-            treeSearch(leaf.childs[i], posSearched);
+    if(currentNode.children.length > 0){
+        for(let i=0; i<currentNode.children.length; i++){
+            treeSearch(currentNode.children[i], newNode);
         }
     }
 
 }
-
-
-// Once the player movs, set the image in the map
-function setPlayer(){
-    let playerPos = currentPos.join('-') + 'image';
-    playerImage = document.createElement('img');
-    playerImage.setAttribute("src", srcImage);
-    playerImage.setAttribute("id", "imagePlayer");
-    playerImage.setAttribute("height", "100%");
-    playerImage.setAttribute("width", "100%");
-    playerImage.setAttribute("alt", "player");
-    document.getElementById(playerPos).appendChild(playerImage);
-}
-
-
-$(document.body).on('click', '#infoBtn' ,function(e){
-    var selected = $(e.currentTarget);
-    swal({
-          title: characters[selected.attr("character-btn")].name,
-          html: createLandsTable(selected.attr("character-btn")),
-          imageUrl: characters[selected.attr("character-btn")].src,
-          imageWidth: 100,
-          imageHeight: 100,
-          animation: false
-        })
-});
 
 
 // The goal is reached and the player is appended to the session storage
@@ -462,75 +509,10 @@ function goalReached(reached) {
     }
     player = undefined;
     if(playedCharacters.length == characters.length-1 || characters.length == playedCharacters.length){
-        var leftSide = document.getElementById('leftSide');
-
-        var buttonDiv = document.getElementById('nextBtnDiv');
-        if(!buttonDiv){
-            buttonDiv = document.createElement('div');
-            buttonDiv.setAttribute('id', 'nextBtnDiv');
-            buttonDiv.setAttribute('class', 'row');
-            buttonDiv.setAttribute('style', 'margin-top:20px');
-            var nextBtn = document.createElement('button');
-            nextBtn.setAttribute('id', 'nextBtn');
-            nextBtn.setAttribute('class', 'btn btn-primary btn-md');
-            nextBtn.textContent = 'Go to Stats!';
-            buttonDiv.appendChild(nextBtn);
-            leftSide.appendChild(buttonDiv);
-        }
-
-
+        createNxtBtn();
     }
 }
 
-// Aux function, create the map with the player habilities
-function createLandsTable(characterID){
-    var table = '<h5>Lands</h5>'+
-            '<table class="table">'+
-            '<thead class="thead-dark">'+
-                '<tr>'+
-                  '<th scope="col">ID</th>'+
-                  '<th scope="col">Name</th>'+
-                  '<th scope="col">Cost</th>'+
-                '</tr>'+
-            '</thead>'+
-            '<tbody>';
-
-    for (var i=0; i<lands.length; i++){
-        table += `<tr>
-            <td> ${lands[i].id} </td>
-            <td><span style='color: #${lands[i].color}'> ${lands[i].name} </span></td>
-            <td> ${characters[characterID][lands[i].id]} </td>
-            </tr>`
-    }
-    table +=`</tbody>
-    </table>`;
-    return table
-}
-
-
-// validate if isn´t a game started
-$(document.body).on('click', '#playBtn' ,function(e){
-    var selected = $(e.currentTarget);
-    if(player){
-        swal({
-            title: 'A game is in progress',
-            text: "You want to stop this game and play with " + characters[selected.attr("character-btn")].name,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, go ahead'
-        }).then((result) => {
-            //player = undefined;
-            goalReached(false);
-            startGame(e);
-        })
-    }
-    else{
-        startGame(e);
-    }
-
-});
 
 // starts a new game, clean the vars and
 function startGame(e){
@@ -545,9 +527,6 @@ function startGame(e){
     document.getElementById(begin.join('-')).focus();
     srcImage = characters[selected.attr("character-btn")].src;
     currentPos = begin;
-    tree.root = begin;
-    tree.childs = [];
-    visited.push(tree);
     let parentx = begin[0];
     let parenty = begin[1];
     parentNode.push(parentx);
@@ -557,10 +536,6 @@ function startGame(e){
 
 }
 
-// aux function: set the total cost of all the movs in the screen
-function setCost(){
-    document.getElementById('characterCost').textContent = "Total cost: " + totalCost.toFixed(2);
-}
 
 // Clean the map before a new game starts
 function cleanMap(){
@@ -569,6 +544,7 @@ function cleanMap(){
     begin = JSON.parse(begin);
     currentPos = begin;
     movs = [];
+    tree = [];
     for(let y=0; y<maze.length; y++){
         for(let x=0; x<maze[y].length; x++){
             let pos = `${x.toString()}-${y.toString()}`;
@@ -588,30 +564,9 @@ function cleanMap(){
     setTooltip(end[0], end[1]);
     // clean image
     try {
-        var imgDiv = document.getElementById("imagePlayer");
+        let imgDiv = document.getElementById("imagePlayer");
         imgDiv.parentNode.removeChild(imgDiv);
     }catch{}
 }
-
-
-$(document.body).on('click', '#nextBtn' ,function(e){
-    if(player){
-        swal({
-            title: 'A game is in progress',
-            text: "You want to stop this game and see the stats",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, go ahead'
-        }).then((result) => {
-            goalReached(false);
-        })
-    }
-
-    window.location.href = "/maze/stats";
-
-});
-
 
 

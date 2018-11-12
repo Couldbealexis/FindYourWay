@@ -118,3 +118,5 @@ def character(request):
 @csrf_exempt
 def stats(request):
     return render(request, './labyrinth/stats.html')
+
+

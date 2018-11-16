@@ -167,6 +167,14 @@ function Tree(data){
 // Drawing the tree in the screen
 function drawTree(){
 
+    let divInstructions = document.getElementById('instructions');
+    let divGraph = document.getElementById("network-graph");
+    divInstructions.removeChild(divGraph);
+
+    divGraph = document.createElement('div');
+    divGraph.setAttribute('id', "network-graph");
+    divInstructions.appendChild(divGraph);
+
     s = new sigma({
         graph: data,
         container: 'network-graph',
@@ -337,10 +345,8 @@ $(document.body).on('click', '#nextBtn' ,function(e){
 // #End section Aux functions
 
 
-// Expand cell and his neighbours
-function unmaskCell(x,y){
-    colorCell(x,y);
-    setTooltip(begin[0], begin[1]);
+// add new leaf to the tree
+function addLeaf(coords, HN, GN){
     let data = {};
     // data = {
     //     coords,
@@ -348,9 +354,9 @@ function unmaskCell(x,y){
     //     GN,
     //     visit
     //}
-    data.coords = currentPos;
-    data.HN = 0;
-    data.GN = 0;
+    data.coords = coords;
+    data.HN = HN;
+    data.GN = GN;
     let leaf = new Node(data, parentNode);
     if(movs.length == 0){
         data.visit = 1;
@@ -361,6 +367,15 @@ function unmaskCell(x,y){
         data.visit = movs.length;
         treeSearch(tree, leaf)
     }
+    return leaf
+}
+
+
+// Expand cell and his neighbours
+function unmaskCell(x,y){
+    colorCell(x,y);
+    setTooltip(begin[0], begin[1]);
+    let leaf = addLeaf(currentPos, 0, 0);
     visited.push(data);
     // right cell
     if(parseInt(x) + 1 < maze["0"].length){

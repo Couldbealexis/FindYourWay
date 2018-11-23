@@ -16,8 +16,10 @@
         <br> <br>
 
         <div id="characters-row" class="row">
-
         </div>
+
+        <button type="button" onclick="uniformCost()">Costo uniforme</button>
+
         <br>
 
         <div id="mazeHeader" class="row">
@@ -62,6 +64,7 @@
 
         // movs-in-the-game vars
         let currentPos = [];
+        let nActual = false;
         let player;
         let playerImage;
         let srcImage;

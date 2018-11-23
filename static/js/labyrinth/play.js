@@ -6,6 +6,7 @@ $(document).ready(function (){
     lands = JSON.parse(lands);
     begin = sessionStorage.getItem('begin');
     begin = JSON.parse(begin);
+    console.log(begin);
     end = sessionStorage.getItem('end');
     end = JSON.parse(end);
     characters = sessionStorage.getItem('characters');
@@ -161,6 +162,7 @@ function Node(data, parent) {
 // Create a tree
 function Tree(data){
     tree = new Node(data, null);
+    addAdyacentNeighbors(tree);
 }
 
 
@@ -337,6 +339,7 @@ $(document.body).on('click', '#nextBtn' ,function(e){
 // #End section Aux functions
 
 
+
 // Expand cell and his neighbours
 function unmaskCell(x,y){
     colorCell(x,y);
@@ -357,7 +360,7 @@ function unmaskCell(x,y){
         Tree(data);
     }else if (movs.length == 1){
         tree.children.push(leaf);
-    }else{
+    }else {
         data.visit = movs.length;
         treeSearch(tree, leaf)
     }
@@ -385,6 +388,63 @@ function unmaskCell(x,y){
 
 }
 
+function addAdyacentNeighbors(node){
+
+  console.log(node);
+
+  let element = document.getElementById(parseInt(node.data.coords[0] + 1) + "-" + node.data.coords[1]);
+  console.log("derecho");
+  console.log(element);
+  if(element !== null){
+    let data = { HN: 0,
+                GN: 0,
+                visit: 0,
+                 coords:  [ node.data.coords[0], parseInt(node.data.coords[1] + 1 ) ],
+                element: element
+               };
+    node.children.push(new Node(data, [ node.data.coords[0], node.data.coords[1] ]));
+  }
+
+  element = document.getElementById(parseInt(node.data.coords[0] - 1) + "-" + node.data.coords[1]);
+  console.log("izquierda");
+  console.log(element);
+  if(element !== null){
+    let data = { HN: 0,
+                GN: 0,
+                visit: 0,
+                 coords:  [ node.data.coords[0], parseInt(node.data.coords[1] + 1 ) ],
+                element: element
+               };
+    node.children.push(new Node(data, [ node.data.coords[0], node.data.coords[1] ]));
+  }
+
+  element = document.getElementById(node.data.coords[0] + "-" + parseInt(node.data.coords[1] - 1));
+  console.log("arriba");
+  console.log(element);
+  if(element !== null){
+  let data = { HN: 0,
+              GN: 0,
+              visit: 0,
+               coords:  [ node.data.coords[0], parseInt(node.data.coords[1] + 1 ) ],
+              element: element
+             };
+    node.children.push(new Node(data, [ node.data.coords[0], node.data.coords[1] ]));
+  }
+
+  element = document.getElementById(node.data.coords[0] + "-" + parseInt(node.data.coords[1] + 1));
+  console.log("abajo");
+  console.log(element);
+  if(element !== null){
+    let data = { HN: 0,
+                GN: 0,
+                visit: 0,
+                 coords:  [ node.data.coords[0], parseInt(node.data.coords[1] + 1 ) ],
+                element: element
+               };
+    node.children.push(new Node(data, [ node.data.coords[0], node.data.coords[1] ]));
+  }
+
+}
 
 // move the player
 function move(side){
@@ -398,7 +458,7 @@ function move(side){
     parentNode.push(zeroPos);
     parentNode.push(onePos);
 
-    if(side=='39')
+    if(side=='39' || side == 'right')
     {//si la tecla presionada es derecha
         if(currentPos[0] + 1 < maze["0"].length){
             nextPos[0] = nextPos[0] + 1;
@@ -406,7 +466,7 @@ function move(side){
         }
     }
 
-    if(side=='37')
+    if(side=='37' || side == 'left')
     {//si la tecla presionada es izquierda
         if(currentPos[0] > 0){
             nextPos[0] = nextPos[0] - 1;
@@ -414,7 +474,7 @@ function move(side){
         }
     }
 
-    if(side=='38')
+    if(side=='38' || side == 'top')
     {//si la tecla presionada es arriba
         if(currentPos[1] > 0){
             nextPos[1] = nextPos[1] - 1;
@@ -422,7 +482,7 @@ function move(side){
         }
     }
 
-    if(side=='40')
+    if(side=='40'  || side == 'bottom')
     {// si la tecla presionada es abajo
         if(currentPos[1] + 1 < maze.length){
             nextPos[1] = nextPos[1] + 1;
@@ -473,14 +533,59 @@ function appendMove() {
 function treeSearch(currentNode, newNode){
     if(currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1] ){
         currentNode.children.push(newNode);
+
+        addAdyacentNeighbors(currentNode);
+
         return;
     }
     if(currentNode.children.length > 0){
         for(let i=0; i<currentNode.children.length; i++){
-            treeSearch(currentNode.children[i], newNode);
+            return treeSearch(currentNode.children[i], newNode);
         }
     }
 
+}
+
+function treeSearchNode(currentNode, x, y){
+  if(currentNode.data.coords[0] === x && currentNode.data.coords[1] === y ){
+      return currentNode;
+  }
+  if(currentNode.children.length > 0){
+      for(let i=0; i<currentNode.children.length; i++){
+          return treeSearchNode(currentNode.children[i], x, y);
+      }
+  }
+}
+
+function uniformCost(){
+  let nStart = treeSearchNode(tree, begin[0], begin[1]);
+  //let nEnd = treeSearchNode(tree, end[0], end[1]);
+
+  let sumList = [];
+
+  currentPos = begin;
+  let minor = false;
+
+  expanded.push(nStart);
+
+  nActual = nStart;
+
+  /*do {
+
+    visited.push(nActual);
+
+    move("right");
+
+    sumList.push(0);
+
+    for()
+
+  } while(!isGoal(nActual, end[0], end[1])) */
+
+}
+
+function isGoal(node, endX, endY){
+  return node.data.coords[0] === endX && node.data.coords[1] === endY;
 }
 
 
@@ -568,5 +673,3 @@ function cleanMap(){
         imgDiv.parentNode.removeChild(imgDiv);
     }catch{}
 }
-
-

@@ -15,12 +15,25 @@
         </div>
         <br> <br>
 
-        <div id="characters-row" class="row">
+        <h5 class="row">1. Choose a priority</h5>
+
+        <div class="algorithms-row row mb-3">
+            <button class="btn priority mr-1" data-priority="right" type="button" onclick="choosePriority(event)">RIGHT</button>
+            <button class="btn priority mr-1" data-priority="left" type="button" onclick="choosePriority(event)">LEFT</button>
+            <button class="btn priority mr-1" data-priority="top" type="button" onclick="choosePriority(event)">TOP</button>
+            <button class="btn priority" data-priority="down" type="button" onclick="choosePriority(event)">DOWN</button>
         </div>
 
-        <button type="button" onclick="uniformCost()">Costo uniforme</button>
+        <h5 class="row">2. Choose a character</h5>
 
-        <br>
+        <div id="characters-row" class="row mb-2 text-center">
+        </div>
+
+        <h5 class="row">3. Choose an algorithm</h5>
+
+        <div class="algorithms-row row mb-2">
+            <button class="btn" type="button" onclick="uniformCost()">Uniform cost</button>
+        </div>
 
         <div id="mazeHeader" class="row">
             <div class="Hcell">
@@ -63,6 +76,7 @@
         let nodes = [];
         let nodesVisited = [];
         let nodesExpanded = [];
+        let priorities = [];
 
         let land;
 

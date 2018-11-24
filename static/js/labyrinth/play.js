@@ -29,7 +29,6 @@ $(document).ready(function () {
         // Buttons
         let buttonsDiv = document.createElement('div');
         buttonsDiv.setAttribute('id', 'buttons-row');
-        buttonsDiv.setAttribute('class', 'row');
         let infoBtn = document.createElement('button');
         infoBtn.setAttribute('id', 'infoBtn');
         infoBtn.setAttribute('character-btn', i);
@@ -39,7 +38,7 @@ $(document).ready(function () {
         playBtn.setAttribute('id', 'playBtn');
         playBtn.setAttribute('character-btn', i);
         playBtn.setAttribute('class', 'btn btn-success btn-md');
-        playBtn.textContent = 'Play';
+        playBtn.textContent = 'Choose character';
         buttonsDiv.appendChild(infoBtn);
         buttonsDiv.appendChild(playBtn);
         characterDiv.appendChild(characterImage);
@@ -152,6 +151,11 @@ function Node(data, parent) {
     return node;
 }
 
+function NodeInMap(data){
+    let node = data;
+    return node;
+}
+
 function setNodeElement(node, coords) {
     let element = document.getElementById(coords.join('-'));
     node.element = element;
@@ -159,7 +163,7 @@ function setNodeElement(node, coords) {
 
 
 // Create a tree
-function Tree(data){
+function Tree(data) {
     tree = new Node(data, null);
 }
 
@@ -283,29 +287,44 @@ function setPlayer() {
 }
 
 $(document.body).on('click', '#playBtn', function (e) {
-    var selected = $(e.currentTarget);
+
+    if(priorities.length === 0){
+        swalText('You must select a priority first');
+        return;
+    }
+
     if (player) {
-        swal({
-            title: 'A game is in progress',
-            text: "You want to stop this game and play with " + characters[selected.attr("character-btn")].name,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, go ahead'
-        }).then((result) => {
-            //player = undefined;
-            goalReached(false
-    )
-        ;
-        startGame(e);
-    })
+        swalGameInProgress($(e.currentTarget)).then(result => {
+            startGame(e);
+        });
     }
     else {
         startGame(e);
     }
-
 });
+
+
+function swalGameInProgress(selected) {
+    return swal({
+        title: 'A game is in progress',
+        text: "You want to stop this game and play with " + characters[selected.attr("character-btn")].name,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, go ahead'
+    });
+}
+
+
+function swalText(text) {
+    return swal({
+        title: 'Oooops!',
+        text: text,
+        type: 'warning',
+    });
+}
+
 
 $(document.body).on('click', '#infoBtn', function (e) {
     let selected = $(e.currentTarget);
@@ -330,10 +349,8 @@ $(document.body).on('click', '#nextBtn', function (e) {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, go ahead'
         }).then((result) => {
-            goalReached(false
-    )
-        ;
-    })
+            goalReached(false);
+        })
     }
 
     window.location.href = "/maze/stats";
@@ -344,7 +361,7 @@ $(document.body).on('click', '#nextBtn', function (e) {
 
 // Expand cell and his neighbours
 function unmaskCell(x, y) {
-    colorCell(x,y);
+    colorCell(x, y);
     setTooltip(begin[0], begin[1]);
     let data = {
         coords: currentPos,
@@ -352,75 +369,38 @@ function unmaskCell(x, y) {
         GN: 0,
     };
     let leaf = new Node(data, parentNode);
-    if(movs.length == 0){
+    if (movs.length == 0) {
         data.visit = 1;
         Tree(data);
-    }else if (movs.length == 1){
+    } else if (movs.length == 1) {
         tree.children.push(leaf);
-    }else{
+    } else {
         data.visit = movs.length;
         treeSearch(tree, leaf)
     }
     visited.push(data);
     // right cell
-    if(parseInt(x) + 1 < maze["0"].length){
+    if (parseInt(x) + 1 < maze["0"].length) {
         colorCell((parseInt(x) + 1), y);
         setTooltip((parseInt(x) + 1), y);
     }
     // left cell
-    if(x > 0){
+    if (x > 0) {
         colorCell((parseInt(x) - 1), y);
         setTooltip((parseInt(x) - 1), y);
     }
     // up cell
-    if(y > 0){
+    if (y > 0) {
         colorCell(x, (parseInt(y) - 1));
         setTooltip(x, (parseInt(y) - 1));
     }
     // down cell
-    if(parseInt(y) + 1 < maze.length){
+    if (parseInt(y) + 1 < maze.length) {
         colorCell(x, (parseInt(y) + 1));
         setTooltip(x, (parseInt(y) + 1));
     }
 
 }
-
-
-/** COULD BE USED FOR TREE
- *
- * Every "maybe neighbor" in the array is a coordinate of right, left, top, and bottom.
- * If the node does not have that coordinate as a children, then locate the HTML element, create a Node with the given
- * coords and push it as a children. Also reference the adyacent neighbors of this new node.
- * @param node
- */
-/*
-function addAdyacentNeighbors(node) {
-
-    let maybeNeighborsCoords = [];
-    maybeNeighborsCoords.push([parseInt(node.data.coords[0] + 1), node.data.coords[1]]);
-    maybeNeighborsCoords.push([parseInt(node.data.coords[0] - 1), node.data.coords[1]]);
-    maybeNeighborsCoords.push([node.data.coords[0], parseInt(node.data.coords[1] - 1)]);
-    maybeNeighborsCoords.push([node.data.coords[0], parseInt(node.data.coords[1] + 1)]);
-
-    maybeNeighborsCoords.forEach(function (coords) {
-
-        if (node.parent == null || (!hasChildren(node, coords) && notAParent(node.parent, coords))) {
-
-            let element = document.getElementById(coords.join('-'));
-            if (element !== null) {
-                let newNode = new Node({
-                    HN: 0,
-                    GN: 0,
-                    visit: 0,
-                    coords: coords,
-                }, node.data.coords);
-                node.children.push(newNode);
-                setNodeElement(newNode, coords);
-            }
-        }
-
-    });
-}*/
 
 // move the player
 function move(side) {
@@ -434,28 +414,28 @@ function move(side) {
     parentNode.push(zeroPos);
     parentNode.push(onePos);
 
-    if (side == '39' || side == 'right') {//si la tecla presionada es derecha
+    if (side == '39') {//si la tecla presionada es derecha
         if (currentPos[0] + 1 < maze["0"].length) {
             nextPos[0] = nextPos[0] + 1;
             validPos = true;
         }
     }
 
-    if (side == '37' || side == 'left') {//si la tecla presionada es izquierda
+    if (side == '37') {//si la tecla presionada es izquierda
         if (currentPos[0] > 0) {
             nextPos[0] = nextPos[0] - 1;
             validPos = true;
         }
     }
 
-    if (side == '38' || side == 'top') {//si la tecla presionada es arriba
+    if (side == '38') {//si la tecla presionada es arriba
         if (currentPos[1] > 0) {
             nextPos[1] = nextPos[1] - 1;
             validPos = true;
         }
     }
 
-    if (side == '40' || side == 'bottom') {// si la tecla presionada es abajo
+    if (side == '40') {// si la tecla presionada es abajo
         if (currentPos[1] + 1 < maze.length) {
             nextPos[1] = nextPos[1] + 1;
             validPos = true;
@@ -483,8 +463,8 @@ function move(side) {
     }
 }
 
-function moveToCoords(coords){
-    if(coords != null){
+function moveToCoords(coords) {
+    if (coords != null) {
         let nextCell = document.getElementById(coords.join('-'));
         land = findLandById(nextCell.getAttribute('data-land'));
         if (player[land.id] >= 0) {
@@ -496,17 +476,12 @@ function moveToCoords(coords){
             element.parentNode.removeChild(element);
             setPlayer();
             setCost(totalCost);
-            if (JSON.stringify(currentPos) === JSON.stringify(end)) {
+            if (coords[0] === end[0] && coords[1] === end[1]) {
                 goalReached(true)
             }
         }
     }
 }
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 
 // track all the movs
 function appendMove() {
@@ -526,22 +501,114 @@ function appendMove() {
 
 // currentNode is the node that is compared with the newNode.
 // If the compare is true, append, else, keep searching
-function treeSearch(currentNode, newNode){
-    if(currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1] ){
+function treeSearch(currentNode, newNode) {
+    if (currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1]) {
         currentNode.children.push(newNode);
         return;
     }
-    if(currentNode.children.length > 0){
-        for(let i=0; i<currentNode.children.length; i++){
+    if (currentNode.children.length > 0) {
+        for (let i = 0; i < currentNode.children.length; i++) {
             treeSearch(currentNode.children[i], newNode);
         }
     }
 
 }
 
+function mapNodes() {
+    for (let column = 0; column < maze.length; column++) {
+        for (let row = 0; row < maze[column].length; row++) {
+
+            let node = new NodeInMap({
+                element: document.getElementById(row + "-" + column),
+                childrens: {
+                    right: null,
+                    left: null,
+                    top: null,
+                    down: null
+                },
+                start: column === begin[0] && row === begin[1],
+                end: column === end[0] && row === end[1],
+                cost: player[$(document.getElementById(row + "-" + column)).data('land')],
+                coords: [row, column],
+                wall: player[$(document.getElementById(row + "-" + column)).data('land')] === -1,
+                sumWeight: 0,
+                parent: null
+            });
+
+            let childrenCoords = {
+                right: [parseInt(row + 1), column],
+                left: [parseInt(row - 1), column],
+                top: [row, parseInt(column - 1)],
+                down: [row, parseInt(column + 1)]
+            };
+
+            Object.keys(childrenCoords).forEach(function (key) {
+
+                let element = document.getElementById(childrenCoords[key].join('-'));
+                if (element !== null) {
+                    node.childrens[key] = element;
+                }
+
+            });
+
+            nodes.push(node);
+
+        }
+    }
+}
+
+// starts a new game, clean the vars and
+function startGame(e) {
+    goal = false;
+    cleanMap();
+    let selected = $(e.currentTarget);
+    player = characters[selected.attr("character-btn")];
+    selected[0].disabled = true;
+    document.getElementById('characterPlaying').textContent = "Now playing: " + characters[selected.attr("character-btn")].name;
+    totalCost = 0;
+    setCost();
+    document.getElementById(begin.join('-')).focus();
+    srcImage = characters[selected.attr("character-btn")].src;
+    currentPos = begin;
+    let parentx = begin[0];
+    let parenty = begin[1];
+    parentNode.push(parentx);
+    parentNode.push(parenty);
+    setPlayer();
+    mapNodes();
+    appendMove();
+
+}
+
+function choosePriority(e){
+
+    let prioritiesElements = document.getElementsByClassName('priority');
+    for(let o in prioritiesElements){
+        if( prioritiesElements[o].style)
+            prioritiesElements[o].style.backgroundColor = "#ddd";
+    }
+
+    e.target.style.backgroundColor = "#42bb3a";
+    priorities = [ e.target.dataset.priority ];
+
+    let directions = ['right','left','top','down'];
+    directions.forEach(function(key){
+        let find = priorities.findIndex(function(priority){
+            return priority === key;
+        });
+        if(find === -1)
+            priorities.push(key);
+    });
+}
+
 async function uniformCost() {
+
+    if(!player) {
+        swalText('You must choose a character first');
+        return;
+    }
+
     let nStart = nodeSearch(begin);
-    let nEnd = nodeSearch(end);
     let minor = null;
     let sumList = [];
 
@@ -553,68 +620,82 @@ async function uniformCost() {
 
     expanded.push(nActual);
 
+    let finish = false;
     do {
 
-          nodesVisited.push(nActual);
-          sumList.push(nActual.sumWeight);
-          moveToCoords(nActual.coords);
+        nodesVisited.push(nActual);
+        sumList.push(nActual.sumWeight);
+        moveToCoords(nActual.coords);
 
-          let directions = ['right', 'left', 'top', 'bottom'];
-          directions.forEach(function (key) {
-              if (nActual.childrens[key] != null) {
-                  if (!hasBeenVisited(nActual.childrens[key])) {
-                      nActual.childrens[key].parent = nActual;
-                      nodesExpanded.push(nodeSearch([nActual.childrens[key].dataset.row, nActual.childrens[key].dataset.column]));
-                      nActual.childrens[key].wall += nActual.childrens[key].parent.wall;
-                      nActual.childrens[key].sumWeight += nActual.childrens[key].wall;
-                  }
-              }
-          });
+        priorities.forEach(function (key) {
+            console.log("DIRECCION: " + key);
+            if (nActual.childrens[key] != null) {
+                let childrenNode = nodeSearch([nActual.childrens[key].dataset.column, nActual.childrens[key].dataset.row]);
+                if (!hasBeenVisited(childrenNode.coords)) {
+                    childrenNode.parent = nActual;
+                    nodesExpanded.push(childrenNode);
+                    childrenNode.wall += childrenNode.parent.wall;
+                    childrenNode.sumWeight += childrenNode.wall;
+                }
+            }
+        });
 
-          minor = nodesExpanded.length > 0 ? nodesExpanded[nodesExpanded.length - 1] : false;
-          let minorSumWeight = minor.sumWeight + 1;
+        minor = nodesExpanded.length > 0 ? nodesExpanded[nodesExpanded.length - 1] : false;
+        let minorSumWeight = minor.sumWeight + 1;
 
-          if (minor) {
-              if (nActual.childrens.top == null && nActual.childrens.bottom == null
-                  && nActual.childrens.left == null && nActual.childrens.right == null) {
-                  for (let i = 0; i < nodesExpanded.length; i++) {
-                      if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords)) {
-                          if (nActual.childrens.top == null && nActual.childrens.bottom == null &&
-                              nActual.childrens.left == null && nActual.childrens.right == null) {
-                              minor = nodesExpanded[i];
-                              minorSumWeight = minor.sumWeight + 1;
-                          }
-                      }
-                  }
-              }
+        if (minor) {
+            if (nActual.childrens.top == null && nActual.childrens.down == null
+                && nActual.childrens.left == null && nActual.childrens.right == null) {
+                for (let i = 0; i < nodesExpanded.length; i++) {
+                    if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords) &&
+                        nActual.childrens.top == null && nActual.childrens.down == null &&
+                        nActual.childrens.left == null && nActual.childrens.right == null) {
+                        minor = nodesExpanded[i];
+                        minorSumWeight = minor.sumWeight + 1;
+                    }
+                }
+            }
 
-              for (let i = 0; i < nodesExpanded.length; i++) {
-                  if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords)) {
-                      if (nodesExpanded[i].sumWeight < minorSumWeight &&
-                          nodesExpanded[i].coords[0] != nActual.coords[0] && nodesExpanded[i].coords[1] != nActual.coords[1]) {
-                          minor = nodesExpanded[i];
-                          minorSumWeight = minor.sumWeight;
-                      }
-                  }
-              }
-          }
+            for (let i = 0; i < nodesExpanded.length; i++) {
+                if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords) &&
+                    nodesExpanded[i].sumWeight < minorSumWeight &&
+                    nodesExpanded[i].coords[0] != nActual.coords[0] && nodesExpanded[i].coords[1] != nActual.coords[1]) {
+                    minor = nodesExpanded[i];
+                    minorSumWeight = minor.sumWeight;
+                }
+            }
+        }
 
-          nActual = minor;
+        nActual = minor;
 
-          await sleep(1000);
+        await sleep(1000);
 
-          console.log(i);
+        finish = isGoal(nActual);
+        if (finish)
+            moveToCoords(nActual.coords);
 
-    } while(!isGoal(nActual));
+    } while (!finish);
+
+    colorBestRoad();
 
 }
 
-function nodeSearch(coords){
-    return nodes.find(function(node){
+/**
+ * Find a node in the list by given coords
+ * @param coords
+ * @returns {number | undefined}
+ */
+function nodeSearch(coords) {
+    return nodes.find(function (node) {
         return node.coords[0] == coords[0] && node.coords[1] == coords[1];
     });
 }
 
+/**
+ * Determine if a node is is in visited lists by given coords
+ * @param coords
+ * @returns {number | undefined}
+ */
 
 function hasBeenVisited(coords) {
     return nodesVisited.find(function (node) {
@@ -622,10 +703,33 @@ function hasBeenVisited(coords) {
     });
 }
 
+
 function isGoal(node) {
     return node.coords[0] === end[0] && node.coords[1] === end[1];
 }
 
+/**
+ * Navigate from end to start going by every node parent to mark the way changing the opacity
+ */
+function colorBestRoad(){
+    let actual = nodeSearch(end);
+    do {
+        actual.element.style.opacity = 0.3;
+        actual = actual.parent;
+    } while(actual != null);
+}
+
+function cleanBestRoad(){
+    let prioritiesElements = document.getElementsByClassName('cell');
+    for(let o in prioritiesElements){
+        if(prioritiesElements[o].style)
+            prioritiesElements[o].style.opacity = 1;
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // The goal is reached and the player is appended to the session storage
 function goalReached(reached) {
@@ -657,29 +761,6 @@ function goalReached(reached) {
 }
 
 
-// starts a new game, clean the vars and
-function startGame(e) {
-    goal = false;
-    cleanMap();
-    let selected = $(e.currentTarget);
-    player = characters[selected.attr("character-btn")];
-    selected[0].disabled = true;
-    document.getElementById('characterPlaying').textContent = "Now playing: " + characters[selected.attr("character-btn")].name;
-    totalCost = 0;
-    setCost();
-    document.getElementById(begin.join('-')).focus();
-    srcImage = characters[selected.attr("character-btn")].src;
-    currentPos = begin;
-    let parentx = begin[0];
-    let parenty = begin[1];
-    parentNode.push(parentx);
-    parentNode.push(parenty);
-    setPlayer();
-    mapNodes();
-    appendMove();
-
-}
-
 // Clean the nodes before a new game starts
 function cleanMap() {
     // clean text
@@ -689,6 +770,9 @@ function cleanMap() {
     currentPos = begin;
     movs = [];
     tree = [];
+
+    cleanBestRoad();
+
     for (let y = 0; y < maze.length; y++) {
         for (let x = 0; x < maze[y].length; x++) {
             let pos = `${x.toString()}-${y.toString()}`;
@@ -711,47 +795,4 @@ function cleanMap() {
         let imgDiv = document.getElementById("imagePlayer");
         imgDiv.parentNode.removeChild(imgDiv);
     } catch {}
-}
-
-function mapNodes() {
-    for (let column = 0; column < maze.length; column++) {
-        for (let row = 0; row < maze[column].length; row++) {
-
-            let node = {
-                element: document.getElementById(row + "-" + column),
-                childrens: {
-                    right: null,
-                    left: null,
-                    top: null,
-                    bottom: null
-                },
-                start: column === begin[0] && row === begin[1],
-                end: column === end[0] && row === end[1],
-                cost: player[$(document.getElementById(row + "-" + column)).data('land')],
-                coords: [row,column],
-                wall: player[$(document.getElementById(row + "-" + column)).data('land')] === -1,
-                sumWeight: 0,
-                parent: null
-            };
-
-            let childrenCoords = {
-                right: [parseInt(row + 1), column],
-                left: [parseInt(row - 1), column],
-                top: [row, parseInt(column - 1)],
-                bottom: [row, parseInt(column + 1)]
-            };
-
-            Object.keys(childrenCoords).forEach(function(key) {
-
-                let element = document.getElementById(childrenCoords[key].join('-'));
-                if (element !== null) {
-                    node.childrens[key] = element;
-                }
-
-            });
-
-            nodes.push(node);
-
-        }
-    }
 }

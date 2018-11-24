@@ -143,11 +143,12 @@ $(document).ready(function () {
 
 
 // create a new Node to the tree
-function Node(data, parent, childrens) {
-    let node = {};
-    node.data = data;
-    node.parent = parent;
-    node.children = childrens;
+function Node(data, parent) {
+    let node = {
+        data: data,
+        parent: parent,
+        children: []
+    };
     return node;
 }
 
@@ -158,10 +159,8 @@ function setNodeElement(node, coords) {
 
 
 // Create a tree
-function Tree(data) {
+function Tree(data){
     tree = new Node(data, null);
-    setNodeElement(tree, data.coords);
-    addAdyacentNeighbors(tree);
 }
 
 // Drawing the tree in the screen
@@ -345,65 +344,57 @@ $(document.body).on('click', '#nextBtn', function (e) {
 
 // Expand cell and his neighbours
 function unmaskCell(x, y) {
-    colorCell(x, y);
+    colorCell(x,y);
     setTooltip(begin[0], begin[1]);
-    //expandNodeCell();
+    let data = {
+        coords: coords,
+        HN: HN,
+        GN: GN,
+        visit: visit
+    };
+    let leaf = new Node(data, parentNode);
+    if(movs.length == 0){
+        data.visit = 1;
+        Tree(data);
+    }else if (movs.length == 1){
+        tree.children.push(leaf);
+    }else{
+        data.visit = movs.length;
+        treeSearch(tree, leaf)
+    }
     visited.push(data);
     // right cell
-    if (parseInt(x) + 1 < maze["0"].length) {
+    if(parseInt(x) + 1 < maze["0"].length){
         colorCell((parseInt(x) + 1), y);
         setTooltip((parseInt(x) + 1), y);
     }
     // left cell
-    if (x > 0) {
+    if(x > 0){
         colorCell((parseInt(x) - 1), y);
         setTooltip((parseInt(x) - 1), y);
     }
     // up cell
-    if (y > 0) {
+    if(y > 0){
         colorCell(x, (parseInt(y) - 1));
         setTooltip(x, (parseInt(y) - 1));
     }
     // down cell
-    if (parseInt(y) + 1 < maze.length) {
+    if(parseInt(y) + 1 < maze.length){
         colorCell(x, (parseInt(y) + 1));
         setTooltip(x, (parseInt(y) + 1));
     }
 
 }
 
-function expandNodeCell() {
 
-    console.log("expandNodeCell CALLED");
-
-    let data = {};
-    data.coords = currentPos;
-    data.HN = 0;
-    data.GN = 0;
-
-    if (movs.length == 0) {
-        data.visit = 1;
-        Tree(data);
-    } else {
-        let leaf = new Node(data, parentNode);
-        setNodeElement(leaf, data.coords);
-        addAdyacentNeighbors(leaf);
-
-        data.visit = movs.length;
-
-        treeSearch(tree, leaf)
-    }
-
-}
-
-
-/**
+/** COULD BE USED FOR TREE
  *
  * Every "maybe neighbor" in the array is a coordinate of right, left, top, and bottom.
  * If the node does not have that coordinate as a children, then locate the HTML element, create a Node with the given
  * coords and push it as a children. Also reference the adyacent neighbors of this new node.
  * @param node
  */
+/*
 function addAdyacentNeighbors(node) {
 
     let maybeNeighborsCoords = [];
@@ -430,20 +421,7 @@ function addAdyacentNeighbors(node) {
         }
 
     });
-}
-
-
-function hasChildren(node, childrenCoords) {
-    for (let i = 0; i < node.children.length; i++) {
-        if (node.children[i].data.coords[0] === childrenCoords[0] && node.children[i].data.coords[1] === childrenCoords[1])
-            return true;
-    }
-    return false;
-}
-
-function notAParent(parent, coords) {
-    return parent != undefined && parent[0] !== coords[0] && parent[1] !== coords[1];
-}
+}*/
 
 // move the player
 function move(side) {
@@ -549,31 +527,13 @@ function appendMove() {
 
 // currentNode is the node that is compared with the newNode.
 // If the compare is true, append, else, keep searching
-function treeSearch(currentNode, newNode) {
-
-    if (currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1]) {
-
-        //let alreadyChildren = hasChildren(currentNode, newNode.data.coords);
-
-        //if(!alreadyChildren){
+function treeSearch(currentNode, newNode){
+    if(currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1] ){
         currentNode.children.push(newNode);
-        /* }
-         else if(alreadyChildren){
-             let replaceIndex = currentNode.children.findIndex(function(element){
-
-                 console.log(element.data.coords);
-                 console.log(currentNode.data.coords);
-
-                 return element.data.coords[0] == newNode.data.coords[0] &&
-                     element.data.coords[1] == newNode.data.coords[1];
-             });
-             currentNode.children[replaceIndex] = newNode;
-         } */
-
         return;
     }
-    if (currentNode.children.length > 0) {
-        for (let i = 0; i < currentNode.children.length; i++) {
+    if(currentNode.children.length > 0){
+        for(let i=0; i<currentNode.children.length; i++){
             treeSearch(currentNode.children[i], newNode);
         }
     }

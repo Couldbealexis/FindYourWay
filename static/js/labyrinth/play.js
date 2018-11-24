@@ -347,10 +347,9 @@ function unmaskCell(x, y) {
     colorCell(x,y);
     setTooltip(begin[0], begin[1]);
     let data = {
-        coords: coords,
-        HN: HN,
-        GN: GN,
-        visit: visit
+        coords: currentPos,
+        HN: 0,
+        GN: 0,
     };
     let leaf = new Node(data, parentNode);
     if(movs.length == 0){
@@ -554,10 +553,8 @@ async function uniformCost() {
 
     expanded.push(nActual);
 
-    let i = 0;
     do {
 
-      //setInterval(function() {
           nodesVisited.push(nActual);
           sumList.push(nActual.sumWeight);
           moveToCoords(nActual.coords);
@@ -607,12 +604,8 @@ async function uniformCost() {
           await sleep(1000);
 
           console.log(i);
-          i++;
 
-    //  }, 1000);
-
-    } while(i < 30);
-    //!isGoal(nActual)
+    } while(!isGoal(nActual));
 
 }
 

@@ -296,7 +296,7 @@ $(document.body).on('click', '#playBtn', function (e) {
     if (player) {
         swalGameInProgress($(e.currentTarget)).then(result => {
             startGame(e);
-        });
+    });
     }
     else {
         startGame(e);
@@ -350,7 +350,7 @@ $(document.body).on('click', '#nextBtn', function (e) {
             confirmButtonText: 'Yes, go ahead'
         }).then((result) => {
             goalReached(false);
-        })
+    })
     }
 
     window.location.href = "/maze/stats";
@@ -530,23 +530,26 @@ function mapNodes() {
                 end: column === end[0] && row === end[1],
                 cost: player[$(document.getElementById(row + "-" + column)).data('land')],
                 coords: [row, column],
-                wall: player[$(document.getElementById(row + "-" + column)).data('land')] === -1,
+                //wall: player[$(document.getElementById(row + "-" + column)).data('land')] === -1,
                 sumWeight: 0,
-                parent: null
+                parent: null,
+                hn: 0
             });
 
             let childrenCoords = {
-                right: [parseInt(row + 1), column],
-                left: [parseInt(row - 1), column],
-                top: [row, parseInt(column - 1)],
-                down: [row, parseInt(column + 1)]
+                right: player[$(document.getElementById(parseInt(row + 1) + "-" + column)).data('land')] == -1 ? null : [parseInt(row + 1), column],
+                left: player[$(document.getElementById(parseInt(row - 1) + "-" + column)).data('land')] == -1 ? null : [parseInt(row - 1), column],
+                top: player[$(document.getElementById(row + "-" + parseInt(column - 1))).data('land')] == -1 ? null : [row, parseInt(column - 1)],
+                down: player[$(document.getElementById(row + "-" + parseInt(column + 1))).data('land')] == -1 ? null : [row, parseInt(column + 1)]
             };
 
             Object.keys(childrenCoords).forEach(function (key) {
 
-                let element = document.getElementById(childrenCoords[key].join('-'));
-                if (element !== null) {
-                    node.childrens[key] = element;
+                if(childrenCoords[key] != null) {
+                    let element = document.getElementById(childrenCoords[key].join('-'));
+                    if (element !== null) {
+                        node.childrens[key] = element;
+                    }
                 }
 
             });
@@ -610,7 +613,6 @@ async function uniformCost() {
 
     let nStart = nodeSearch(begin);
     let minor = null;
-    let sumList = [];
 
     nodesVisited = [];
     nodesExpanded = [];
@@ -624,7 +626,7 @@ async function uniformCost() {
     do {
 
         nodesVisited.push(nActual);
-        sumList.push(nActual.sumWeight);
+
         moveToCoords(nActual.coords);
 
         priorities.forEach(function (key) {
@@ -634,8 +636,8 @@ async function uniformCost() {
                 if (!hasBeenVisited(childrenNode.coords)) {
                     childrenNode.parent = nActual;
                     nodesExpanded.push(childrenNode);
-                    childrenNode.wall += childrenNode.parent.wall;
-                    childrenNode.sumWeight += childrenNode.wall;
+
+                    //childrenNode.sumWeight += childrenNode.wall;
                 }
             }
         });
@@ -647,9 +649,7 @@ async function uniformCost() {
             if (nActual.childrens.top == null && nActual.childrens.down == null
                 && nActual.childrens.left == null && nActual.childrens.right == null) {
                 for (let i = 0; i < nodesExpanded.length; i++) {
-                    if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords) &&
-                        nActual.childrens.top == null && nActual.childrens.down == null &&
-                        nActual.childrens.left == null && nActual.childrens.right == null) {
+                    if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords)) {
                         minor = nodesExpanded[i];
                         minorSumWeight = minor.sumWeight + 1;
                     }
@@ -678,6 +678,179 @@ async function uniformCost() {
 
     colorBestRoad();
 
+}
+
+async function bestFirst(){
+    if(!player) {
+        swalText('You must choose a character first');
+        return;
+    }
+
+    let nStart = nodeSearch(begin);
+    let nEnd = nodeSearch(end);
+    nodesVisited = [];
+    nodesExpanded = [];
+
+    let nActual = nStart;
+    let minor = null;
+
+    nActual.hn = nodesHn(nActual, nEnd);
+    nActual.sumWeight = nActual.hn;
+
+    nodesExpanded.push(nActual);
+
+    let finish = false;
+
+    do {
+
+        nodesVisited.push(nActual);
+        moveToCoords(nActual.coords);
+
+        priorities.forEach(function (key) {
+            console.log("DIRECCION: " + key);
+            if (nActual.childrens[key] != null) {
+                let childrenNode = nodeSearch([nActual.childrens[key].dataset.column, nActual.childrens[key].dataset.row]);
+                if (!hasBeenVisited(childrenNode.coords)) {
+
+
+                    childrenNode.parent = nActual;
+                    nodesExpanded.push(childrenNode);
+
+                    childrenNode.Hn = nodesHn(childrenNode, nEnd);
+                    childrenNode.sumWeight = childrenNode.Hn;
+
+                }
+            }
+        });
+
+        minor = nodesExpanded.length > 0 ? nodesExpanded[nodesExpanded.length - 1] : false;
+        let minorSumWeight = minor.sumWeight + 1;
+
+        if (minor) {
+            if (nActual.childrens.top == null && nActual.childrens.down == null
+                && nActual.childrens.left == null && nActual.childrens.right == null) {
+                for (let i = 0; i < nodesExpanded.length; i++) {
+                    if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords) ) {
+
+                        minor = nodesExpanded[i];
+                        minorSumWeight = minor.sumWeight + 1;
+
+                    }
+                }
+            }
+
+            for (let i = 0; i < nodesExpanded.length; i++) {
+                if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords) &&
+                    nodesExpanded[i].sumWeight < minorSumWeight &&
+                    nodesExpanded[i].coords[0] != nActual.coords[0] && nodesExpanded[i].coords[1] != nActual.coords[1]) {
+
+                    minor = nodesExpanded[i];
+                    minorSumWeight = minor.sumWeight;
+
+                }
+            }
+        }
+
+        nActual = minor;
+
+        await sleep(1000);
+
+        finish = isGoal(nActual);
+        if (finish)
+            moveToCoords(nActual.coords);
+
+    } while(!finish);
+
+    colorBestRoad();
+
+}
+
+async function aStar(){
+    if(!player) {
+        swalText('You must choose a character first');
+        return;
+    }
+
+    let nStart = nodeSearch(begin);
+    let nEnd = nodeSearch(end);
+    nodesVisited = [];
+    nodesExpanded = [];
+
+    let nActual = nStart;
+    let minor = null;
+
+    nActual.hn = nodesHn(nActual, nEnd);
+    nActual.sumWeight = nActual.hn;
+
+    nodesExpanded.push(nActual);
+
+    let finish = false;
+
+    do {
+
+        nodesVisited.push(nActual);
+        moveToCoords(nActual.coords);
+
+        priorities.forEach(function (key) {
+            console.log("DIRECCION: " + key);
+            if (nActual.childrens[key] != null) {
+                let childrenNode = nodeSearch([nActual.childrens[key].dataset.column, nActual.childrens[key].dataset.row]);
+                if (!hasBeenVisited(childrenNode.coords)) {
+                    childrenNode.parent = nActual;
+                    nodesExpanded.push(childrenNode);
+
+                    childrenNode.Hn += nodesHn(nActual, nEnd);
+                    childrenNode.sumWeight = childrenNode.Hn;
+                }
+            }
+        });
+
+        minor = nodesExpanded.length > 0 ? nodesExpanded[nodesExpanded.length - 1] : false;
+        let minorSumWeight = minor.sumWeight + 1;
+
+        if (minor) {
+            if (nActual.childrens.top == null && nActual.childrens.down == null
+                && nActual.childrens.left == null && nActual.childrens.right == null) {
+                for (let i = 0; i < nodesExpanded.length; i++) {
+                    if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords)) {
+                        minor = nodesExpanded[i];
+                        minorSumWeight = minor.sumWeight + 1;
+                    }
+                }
+            }
+
+            for (let i = 0; i < nodesExpanded.length; i++) {
+                if (nodesExpanded[i] != null && !hasBeenVisited(nodesExpanded[i].coords) &&
+                    nodesExpanded[i].sumWeight < minorSumWeight &&
+                    nodesExpanded[i].coords[0] != nActual.coords[0] && nodesExpanded[i].coords[1] != nActual.coords[1]) {
+                    minor = nodesExpanded[i];
+                    minorSumWeight = minor.sumWeight;
+                }
+            }
+        }
+
+        nActual = minor;
+
+        await sleep(1000);
+
+        finish = isGoal(nActual);
+        if (finish)
+            moveToCoords(nActual.coords);
+
+    } while(!finish);
+
+    colorBestRoad();
+}
+
+function nodesHn(nodeActual, nodeEnd){
+    let x1, x2, y1, y2;
+    x1 = nodeActual.coords[1];
+    y1 = nodeActual.coords[0];
+
+    x2 = nodeEnd.coords[1];
+    y2 = nodeEnd.coords[0];
+
+    return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
 }
 
 /**

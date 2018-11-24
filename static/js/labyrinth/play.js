@@ -154,6 +154,7 @@ function Node(data, parent) {
     //}
     node.parent = parent;
     node.children = [];
+    node.id = uuidv4();
     return node;
 }
 
@@ -189,6 +190,14 @@ function drawTree(){
 
 
 // #Section Aux functions
+// Generate GUID for each node
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 function isBegin(x,y) {
     return x==begin[0] && y==begin[1]
 }
@@ -376,7 +385,7 @@ function unmaskCell(x,y){
     colorCell(x,y);
     setTooltip(begin[0], begin[1]);
     let leaf = addLeaf(currentPos, 0, 0);
-    visited.push(data);
+    visited.push(leaf);
     // right cell
     if(parseInt(x) + 1 < maze["0"].length){
         colorCell((parseInt(x) + 1), y);

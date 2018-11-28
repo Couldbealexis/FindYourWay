@@ -508,7 +508,7 @@ function move(side){
 
             contenedor_arbol = document.createElement('div');
             contenedor_arbol.setAttribute('id', "contenedor-arbol");
-
+            contenedor_arbol.setAttribute('class', "contenedor-arbol");
 
             let estructura = drawTree(tree);
             contenedor_arbol.appendChild(estructura);
@@ -619,6 +619,18 @@ function startGame(e){
     setPlayer();
     appendMove();
 
+
+    let rightSide = document.getElementById("rightSide");
+    let contenedor_arbol = document.getElementById("contenedor-arbol");
+    rightSide.removeChild(contenedor_arbol);
+
+    contenedor_arbol = document.createElement('div');
+    contenedor_arbol.setAttribute('id', "contenedor-arbol");
+    contenedor_arbol.setAttribute('class', "contenedor-arbol");
+
+    let estructura = drawTree(tree);
+    contenedor_arbol.appendChild(estructura);
+    rightSide.appendChild(contenedor_arbol);
 }
 
 

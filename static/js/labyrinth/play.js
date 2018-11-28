@@ -150,7 +150,8 @@ function Node(data, parent) {
     //     coords,
     //     HN,
     //     GN,
-    //     visit
+    //     visit,
+    //     side
     //}
     node.parent = parent;
     node.children = [];
@@ -162,32 +163,48 @@ function Node(data, parent) {
 // Create a tree
 function Tree(data){
     tree = new Node(data, null);
+    actualNode = tree;
 }
 
 
 // Drawing the tree in the screen
-function drawTree(){
+// function drawTree(){
+//
+//     let divInstructions = document.getElementById('instructions');
+//     let divGraph = document.getElementById("network-graph");
+//     divInstructions.removeChild(divGraph);
+//
+//     divGraph = document.createElement('div');
+//     divGraph.setAttribute('id', "network-graph");
+//     divInstructions.appendChild(divGraph);
+//
+//     s = new sigma({
+//         graph: data,
+//         container: 'network-graph',
+//         settings: {
+//           defaultNodeColor: '#ec5148',
+//           defaultEdgeColor: '#000'
+//         }
+//     });
+//
+//     s.refresh();
+// }
 
-    let divInstructions = document.getElementById('instructions');
-    let divGraph = document.getElementById("network-graph");
-    divInstructions.removeChild(divGraph);
-
-    divGraph = document.createElement('div');
-    divGraph.setAttribute('id', "network-graph");
-    divInstructions.appendChild(divGraph);
-
-    s = new sigma({
-        graph: data,
-        container: 'network-graph',
-        settings: {
-          defaultNodeColor: '#ec5148',
-          defaultEdgeColor: '#000'
+// Drawing the tree in the screen
+function drawTree(node){
+    let ul = document.createElement('ul');
+    let li = document.createElement('li');
+    li.setAttribute('id', node.id);
+    li.textContent = node.data.visit.toString() + " GN:" + node.data.GN + " HN:" + node.data.HN + " coords:" + JSON.stringify(node.data.coords);
+    if(node.children.length > 0){
+        for(let i = 0; i<node.children.length; i++){
+            let childUl = drawTree(node.children[i]);
+            li.appendChild(childUl);
         }
-    });
-
-    s.refresh();
+    }
+    ul.appendChild(li);
+    return ul;
 }
-
 
 // #Section Aux functions
 // Generate GUID for each node
@@ -355,25 +372,25 @@ $(document.body).on('click', '#nextBtn' ,function(e){
 
 
 // add new leaf to the tree
-function addLeaf(coords, HN, GN){
+function addLeaf(coords, parent, visit, HN, GN, side){
     let data = {};
     // data = {
     //     coords,
     //     HN,
     //     GN,
-    //     visit
+    //     visit,
+    //     side
     //}
     data.coords = coords;
     data.HN = HN;
     data.GN = GN;
-    let leaf = new Node(data, parentNode);
-    if(movs.length == 0){
+    data.side = side;
+    let leaf = new Node(data, parent);
+    if(visit == 0){
         data.visit = 1;
         Tree(data);
-    }else if (movs.length == 1){
-        tree.children.push(leaf);
     }else{
-        data.visit = movs.length;
+        data.visit = visit;
         treeSearch(tree, leaf)
     }
     return leaf
@@ -384,27 +401,33 @@ function addLeaf(coords, HN, GN){
 function unmaskCell(x,y){
     colorCell(x,y);
     setTooltip(begin[0], begin[1]);
-    let leaf = addLeaf(currentPos, 0, 0);
-    visited.push(leaf);
     // right cell
     if(parseInt(x) + 1 < maze["0"].length){
-        colorCell((parseInt(x) + 1), y);
-        setTooltip((parseInt(x) + 1), y);
+        let coordX = (parseInt(x) + 1);
+        addLeaf([coordX,y], actualNode, -1, 0, 0, "R");
+        colorCell(coordX, y);
+        setTooltip(coordX, y);
     }
     // left cell
     if(x > 0){
-        colorCell((parseInt(x) - 1), y);
-        setTooltip((parseInt(x) - 1), y);
+        let coordX = (parseInt(x) - 1);
+        addLeaf([coordX,y], actualNode, -1, 0, 0, "L");
+        colorCell(coordX, y);
+        setTooltip(coordX, y);
     }
     // up cell
     if(y > 0){
-        colorCell(x, (parseInt(y) - 1));
-        setTooltip(x, (parseInt(y) - 1));
+        let coordY = (parseInt(y) - 1);
+        addLeaf([x,coordY], actualNode, -1, 0, 0, "U");
+        colorCell(x, coordY);
+        setTooltip(x, coordY);
     }
     // down cell
     if(parseInt(y) + 1 < maze.length){
-        colorCell(x, (parseInt(y) + 1));
-        setTooltip(x, (parseInt(y) + 1));
+        let coordY = (parseInt(y) + 1);
+        addLeaf([x,coordY], actualNode, -1, 0, 0, "D");
+        colorCell(x, coordY);
+        setTooltip(x, coordY);
     }
 
 }
@@ -421,12 +444,14 @@ function move(side){
     parentNode = [];
     parentNode.push(zeroPos);
     parentNode.push(onePos);
+    let moveCell;
 
     if(side=='39')
     {//si la tecla presionada es derecha
         if(currentPos[0] + 1 < maze["0"].length){
             nextPos[0] = nextPos[0] + 1;
             validPos = true;
+            moveCell = "R";
         }
     }
 
@@ -434,7 +459,8 @@ function move(side){
     {//si la tecla presionada es izquierda
         if(currentPos[0] > 0){
             nextPos[0] = nextPos[0] - 1;
-                validPos = true;
+            validPos = true;
+            moveCell = "L";
         }
     }
 
@@ -443,6 +469,7 @@ function move(side){
         if(currentPos[1] > 0){
             nextPos[1] = nextPos[1] - 1;
             validPos = true;
+            moveCell = "U";
         }
     }
 
@@ -451,6 +478,7 @@ function move(side){
         if(currentPos[1] + 1 < maze.length){
             nextPos[1] = nextPos[1] + 1;
             validPos = true;
+            moveCell = "D";
         }
     }
 
@@ -462,6 +490,10 @@ function move(side){
             totalCost = parseFloat(totalCost) + parseFloat(player[land.id]);
             currentPos = nextPos;
             appendMove();
+            // let leaf = addLeaf(currentPos, parentNode, movs.length, 0, 0);
+            let leaf = addLeaf(currentPos, actualNode, movs.length, 0, 0, moveCell);
+            visited.push(leaf);
+            actualNode = leaf;
             unmaskCell(currentPos[0], currentPos[1]);
             let element = document.getElementById("imagePlayer");
             element.parentNode.removeChild(element);
@@ -470,6 +502,18 @@ function move(side){
             if(JSON.stringify(currentPos) === JSON.stringify(end)){
                 goalReached(true)
             }
+            let rightSide = document.getElementById("rightSide");
+            let contenedor_arbol = document.getElementById("contenedor-arbol");
+            rightSide.removeChild(contenedor_arbol);
+
+            contenedor_arbol = document.createElement('div');
+            contenedor_arbol.setAttribute('id', "contenedor-arbol");
+
+
+            let estructura = drawTree(tree);
+            contenedor_arbol.appendChild(estructura);
+            rightSide.appendChild(contenedor_arbol);
+
         }
 
     }
@@ -495,8 +539,10 @@ function appendMove() {
 // currentNode is the node that is compared with the newNode.
 // If the compare is true, append, else, keep searching
 function treeSearch(currentNode, newNode){
-    if(currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1] ){
-        currentNode.children.push(newNode);
+    // if(currentNode.data.coords[0] == newNode.parent[0] && currentNode.data.coords[1] == newNode.parent[1] ){
+    if(currentNode.id == newNode.parent.id){
+        searchChild(currentNode, newNode);
+        // currentNode.children.push(newNode);
         return;
     }
     if(currentNode.children.length > 0){
@@ -505,6 +551,20 @@ function treeSearch(currentNode, newNode){
         }
     }
 
+}
+
+function searchChild(currentNode, newNode){
+    let existChild = false;
+    for(let i = 0; i<currentNode.children.length; i++){
+        if(currentNode.children[i].data.side == newNode.data.side){
+            currentNode.children[i].data.visit = newNode.data.visit;
+            currentNode.children[i].id = newNode.id;
+            existChild = true;
+        }
+    }
+    if(!existChild){
+        currentNode.children.push(newNode);
+    }
 }
 
 
@@ -516,11 +576,12 @@ function goalReached(reached) {
     player.totalCost = totalCost;
     player.reachGoal = reached;
     player.movs = movs;
-    player.tree = tree;
+    //player.tree = tree;
     if(!playedCharacters){
         playedCharacters = [];
     }
     playedCharacters.push(player);
+    console.log(playedCharacters);
     let playedCharactersString = JSON.stringify(playedCharacters);
     sessionStorage.removeItem('playedCharacters');
     sessionStorage.setItem('playedCharacters', playedCharactersString);
@@ -583,6 +644,9 @@ function cleanMap(){
             }
         }
     }
+    let leaf = addLeaf(currentPos, [], movs.length, 0, 0, "");
+    //actualNode = leaf;
+    visited.push(leaf);
     unmaskCell(begin[0], begin[1]);
     colorCell(end[0], end[1]);
     setTooltip(end[0], end[1]);

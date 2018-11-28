@@ -35,11 +35,15 @@
         <h3 id="characterCost"></h3>
 
 
-        <div id="instructions" class="instructions">
-            <!-- <h2 class="text-left">¡Tree!</h2> -->
-            <br>
-            <br><br>
-            <div id="network-graph"></div>
+{#        <div id="instructions" class="instructions">#}
+{#            <!-- <h2 class="text-left">¡Tree!</h2> -->#}
+{#            <br>#}
+{#            <br><br>#}
+{#            <div id="network-graph"></div>#}
+{#        </div>#}
+
+        <div id="contenedor-arbol" class="contenedor-arbol" >
+
         </div>
 
     </div>
@@ -75,6 +79,8 @@
         let expanded = [];
         let parentNode = [];
 
+        let actualNode;
+
         // Detect key pressed
         function whichButton(event){
             if(!goal){
@@ -88,76 +94,75 @@
     <script type="text/javascript" src="//sigmajs.org/assets/js/sigma.min.js"></script>
 
   <script type="text/javascript">
-      let data = {
-        "nodes": [
-          {
-            "id": "n0",
-            "label": "A node",
-            "x": 0,
-            "y": 0,
-            "size": 2
-          },
-          {
-            "id": "n1",
-            "label": "Another node",
-            "x": -1,
-            "y": 1,
-            "size": 2
-          },
-          {
-            "id": "n2",
-            "label": "And a last one",
-            "x": 1,
-            "y": 1,
-            "size": 2
-          },
-          {
-            "id": "n3",
-            "label": "child",
-            "x": -2,
-            "y": 2,
-            "size": 2
-          },
-          {
-            "id": "n4",
-            "label": "child",
-            "x": -1,
-            "y": 2,
-            "size": 2
-          }
-        ],
-        "edges": [
-          {
-            "id": "e0",
-            "source": "n0",
-            "target": "n1"
-          },
-          {
-            "id": "e1",
-            "source": "n1",
-            "target": "n4"
-          },
-          {
-            "id": "e3",
-            "source": "n1",
-            "target": "n3"
-          },
-          {
-            "id": "e2",
-            "source": "n2",
-            "target": "n0"
-          }
-        ]
-        }
+      {#let data = {#}
+      {#  "nodes": [#}
+      {#    {#}
+      {#      "id": "n0",#}
+      {#      "label": "A node",#}
+      {#      "x": 0,#}
+      {#      "y": 0,#}
+      {#      "size": 2#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "n1",#}
+      {#      "label": "Another node",#}
+      {#      "x": -1,#}
+      {#      "y": 1,#}
+      {#      "size": 2#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "n2",#}
+      {#      "label": "And a last one",#}
+      {#      "x": 1,#}
+      {#      "y": 1,#}
+      {#      "size": 2#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "n3",#}
+      {#      "label": "child",#}
+      {#      "x": -2,#}
+      {#      "y": 2,#}
+      {#      "size": 2#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "n4",#}
+      {#      "label": "child",#}
+      {#      "x": -1,#}
+      {#      "y": 2,#}
+      {#      "size": 2#}
+      {#    }#}
+      {#  ],#}
+      {#  "edges": [#}
+      {#    {#}
+      {#      "id": "e0",#}
+      {#      "source": "n0",#}
+      {#      "target": "n1"#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "e1",#}
+      {#      "source": "n1",#}
+      {#      "target": "n4"#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "e3",#}
+      {#      "source": "n1",#}
+      {#      "target": "n3"#}
+      {#    },#}
+      {#    {#}
+      {#      "id": "e2",#}
+      {#      "source": "n2",#}
+      {#      "target": "n0"#}
+      {#    }#}
+      {#  ]#}
+      {#  }#}
 
-        s = new sigma({
-        graph: data,
-        container: 'network-graph',
-        settings: {
-          defaultNodeColor: '#ec5148',
-          defaultEdgeColor: '#000'
-          }
-        });
+        {#s = new sigma({#}
+        {#graph: data,#}
+        {#container: 'network-graph',#}
+        {#settings: {#}
+        {#  defaultNodeColor: '#ec5148',#}
+        {#  defaultEdgeColor: '#000'#}
+        {#  };#}
 
   </script>
 
